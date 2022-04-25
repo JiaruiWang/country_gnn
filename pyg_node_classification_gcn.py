@@ -1,3 +1,8 @@
+'''Copied from PyG tutorial 2 Node Classification
+https://colab.research.google.com/drive/14OvFnAXggxB8vM4e8vSURUp1TaKnovzX?usp=sharing#scrollTo=yhofzjaqhfY2
+This tutorial uses simple 2 layer GCNconv, will cause GPU out of memory.
+'''
+
 # %% Helper function for visualization.
 # %matplotlib inline
 import matplotlib.pyplot as plt
