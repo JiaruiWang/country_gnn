@@ -119,7 +119,7 @@ class PagenetDataset(InMemoryDataset):
         edge_index = torch.LongTensor(dft.values)
         return edge_index
 
-    def get_y_label(self, file_path: str) -> torch.Tensor:
+    def get_y_label(self, file_path: str) -> torch.LongTensor:
         '''Node-level ground-truth labels as 243 country classes.
 
         Args:
@@ -129,7 +129,7 @@ class PagenetDataset(InMemoryDataset):
         '''
 
         df = pd.read_csv(file_path, sep='\t', header=None)
-        y = torch.Tensor(df.T.values[0])
+        y = torch.LongTensor(df.T.values[0])
         return y
 
     def get_masks(self, file_path: str) -> torch.Tensor:
