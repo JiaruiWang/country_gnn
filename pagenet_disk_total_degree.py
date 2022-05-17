@@ -3,7 +3,6 @@ import pandas as pd
 import os.path as osp
 
 import torch
-import torch_geometric
 from torch_geometric.data import Data, Dataset
 
 # %% Define PagenetDataset
@@ -28,7 +27,7 @@ class PagenetDataset(Dataset):
         '''Generated dataset file names saved in the './data/processed_dir/'.
         '''
 
-        return ['page_net_total_disk_node_feat_1.pt']
+        return ['page_net_total_disk_node_feat_degree.pt']
 
     # @property
     # def num_nodes(self):
@@ -44,7 +43,7 @@ class PagenetDataset(Dataset):
         return len(self.processed_file_names)
 
     def get(self, idx=None):
-        data = torch.load(osp.join(self.processed_dir, f'page_net_total_disk_node_feat_1.pt'))
+        data = torch.load(osp.join(self.processed_dir, f'page_net_total_disk_node_feat_degree.pt'))
         return data
 
     def process(self):
@@ -53,11 +52,11 @@ class PagenetDataset(Dataset):
         #     # Read data from `raw_path`.
         #     # Every sub dir in './data/raw_dir/' for each dataset.
 
-        x = self.get_node_feature()
+        # x = self.get_node_feature()
         edge_index = self.get_edge_index('./data/raw_dir/edge_index.csv')
         y = self.get_y_label('./data/raw_dir/c_label.csv')
 
-        self.data = Data(x=x, edge_index=edge_index, y=y)
+        self.data = Data(edge_index=edge_index, y=y)
         self.data.train_mask = self.get_masks('./data/raw_dir/c_tr.csv')
         self.data.val_mask = self.get_masks('./data/raw_dir/c_va.csv')
         self.data.test_mask = self.get_masks('./data/raw_dir/c_te.csv')
@@ -74,7 +73,7 @@ class PagenetDataset(Dataset):
         # torch.save(data, osp.join(self.processed_dir, f'data_{idx}.pt'))
         # idx += 1
 
-        torch.save(self.data, osp.join(self.processed_dir, f'page_net_total_disk_node_feat_1.pt'))
+        torch.save(self.data, osp.join(self.processed_dir, f'page_net_total_disk_node_feat_degree.pt'))
         return self.data
 
         
@@ -139,45 +138,28 @@ class PagenetDataset(Dataset):
 
 
 # %% test the dataset 
-root = "data/"
-dataset = PagenetDataset(root)
-data = dataset.get()
+# root = "data/"
+# dataset = PagenetDataset(root)
+# data = dataset.get()
 
 # %% examine the graph
-print(f'Dataset: {data}:')
-print('======================')
-print(f'Number of graphs: {len(data)}')
-print(data)
-print('===========================================================================================================')
+# print(f'Dataset: {data}:')
+# print('======================')
+# print(f'Number of graphs: {len(data)}')
+# print(data)
+# print('===========================================================================================================')
 
 # Gather some statistics about the graph.
-print(f'Number of nodes: {data.num_nodes}')
-print(f'Number of features: {data.num_features}')
-print(f'Number of classes: {data.num_classes}')
-print(f'Number of edges: {data.num_edges}')
-print(f'Average node degree: {data.num_edges / data.num_nodes:.2f}')
-print(f'Number of training nodes: {data.train_mask.sum()}')
-print(f'Number of validation nodes: {data.val_mask.sum()}')
-print(f'Number of testing nodes: {data.test_mask.sum()}')
-print(f'Training node label rate: {int(data.train_mask.sum()) / data.num_nodes:.2f}')
+# print(f'Number of nodes: {data.num_nodes}')
+# print(f'Number of features: {data.num_features}')
+# print(f'Number of classes: {data.num_classes}')
+# print(f'Number of edges: {data.num_edges}')
+# print(f'Average node degree: {data.num_edges / data.num_nodes:.2f}')
+# print(f'Number of training nodes: {data.train_mask.sum()}')
+# print(f'Number of validation nodes: {data.val_mask.sum()}')
+# print(f'Number of testing nodes: {data.test_mask.sum()}')
+# print(f'Training node label rate: {int(data.train_mask.sum()) / data.num_nodes:.2f}')
 # print(f'Has isolated nodes: {data.has_isolated_nodes()}')
 # print(f'Has self-loops: {data.has_self_loops()}')
 # print(f'Is undirected: {data.is_undirected()}')
 # %%
-
-loader = torch_geometric.loader.NeighborLoader(
-    data,
-    # Sample 30 neighbors for each node for 2 iterations
-    num_neighbors=[10] * 2,
-    # Use a batch size of 128 for sampling training nodes
-    batch_size=128,
-    input_nodes=data.train_mask,
-)
-
-count = 0
-print(count)
-for data in loader:
-    print(count)
-    print(data) #  Output data by batch 
-    count += 1
-    if count == 2: break

@@ -4,10 +4,13 @@ import os.path as osp
 
 import torch
 import torch_geometric
-from torch_geometric.data import Data, Dataset
+from torch_geometric.data import InMemoryDataset, Data
+from torch_geometric.data import DataLoader
+
+#from sklearn.model_selection import train_test_split
 
 # %% Define PagenetDataset
-class PagenetDataset(Dataset):
+class USLGCdataset(InMemoryDataset):
     def __init__(self, root, transform=None, pre_transform=None, pre_filter=None):
         '''Initialization.
         Args:
@@ -15,20 +18,22 @@ class PagenetDataset(Dataset):
         '''
 
         super().__init__(root, transform, pre_transform, pre_filter)
-
+        self.data = torch.load(osp.join(self.processed_dir, f'us_in_mem_dataset.pt'))
     @property
     def raw_file_names(self):
         '''Get raw data file names in the './data/raw_dir/'.
         '''
 
-        return ['edge_index.csv', 'c_label.csv', 'c_tr.csv', 'c_va.csv', 'c_te.csv']
+        return ['us_edges_lgc.csv', 
+                'us_lgc_2_hop_bfs_voting_label_correct_2nd.csv', 
+                'dist_list_idx+52_in_out_all.csv']
 
     @property
     def processed_file_names(self):
         '''Generated dataset file names saved in the './data/processed_dir/'.
         '''
 
-        return ['page_net_total_disk_node_feat_1.pt']
+        return ['us_in_mem_dataset.pt']
 
     # @property
     # def num_nodes(self):
@@ -40,12 +45,12 @@ class PagenetDataset(Dataset):
         # path = download_url(url, self.raw_dir)
         # ...
 
-    def len(self):
-        return len(self.processed_file_names)
+    # def len(self):
+    #     return len(self.processed_file_names)
 
-    def get(self, idx=None):
-        data = torch.load(osp.join(self.processed_dir, f'page_net_total_disk_node_feat_1.pt'))
-        return data
+    # def get(self, idx=None):
+    #     data = torch.load(osp.join(self.processed_dir, f'page_net_s_100k_memory_node_feat_1.pt'))
+    #     return data
 
     def process(self):
         idx = 0
@@ -53,17 +58,17 @@ class PagenetDataset(Dataset):
         #     # Read data from `raw_path`.
         #     # Every sub dir in './data/raw_dir/' for each dataset.
 
-        x = self.get_node_feature()
-        edge_index = self.get_edge_index('./data/raw_dir/edge_index.csv')
-        y = self.get_y_label('./data/raw_dir/c_label.csv')
+        # x = self.get_node_feature('./data/raw_dir/dist_list_idx+52_in_out_all.csv')
+        edge_index = self.get_edge_index('./data/raw_dir/us_edges.csv')
+        # y = self.get_y_label('./data/raw_dir/us_lgc_2_hop_bfs_voting_label_correct_2nd.csv')
 
-        self.data = Data(x=x, edge_index=edge_index, y=y)
-        self.data.train_mask = self.get_masks('./data/raw_dir/c_tr.csv')
-        self.data.val_mask = self.get_masks('./data/raw_dir/c_va.csv')
-        self.data.test_mask = self.get_masks('./data/raw_dir/c_te.csv')
-        self.data.num_classes = 243
-        
-        # data.num_classes = 243
+        # self.data = Data(x=x, edge_index=edge_index, y=y)
+        self.data = Data(edge_index=edge_index)
+
+        self.data.num_classes = 52
+        self.data.train_mask = torch.Tensor([1 for i in range(6163640)])
+        self.data.val_mask = torch.Tensor([1 for i in range(6163640)])
+        self.data.test_mask = torch.Tensor([1 for i in range(6163640)])
 
         # if self.pre_filter is not None and not self.pre_filter(data):
         #     continue
@@ -74,8 +79,11 @@ class PagenetDataset(Dataset):
         # torch.save(data, osp.join(self.processed_dir, f'data_{idx}.pt'))
         # idx += 1
 
-        torch.save(self.data, osp.join(self.processed_dir, f'page_net_total_disk_node_feat_1.pt'))
-        return self.data
+        # data, slices = self.collate(data_list)
+        # print("In process data and slices:")
+        # print(data)
+        # print(slices)
+        torch.save(self.data, osp.join(self.processed_dir, f'us_in_mem_dataset.pt'))
 
         
     def get_node_feature(self, file_path: str = None) -> torch.Tensor:
@@ -87,14 +95,16 @@ class PagenetDataset(Dataset):
             x: A torch.Tensor with shape (num_nodes, num_node_features).
         '''
             
-        num_nodes = 60924683
+        # num_nodes = 60924683
 
-        # 1. Just add constant value 1 for each node as feature augmentation.
-        x = [[1] for i in range(num_nodes)]
-        x = torch.Tensor(x)
+        # # 1. Just add constant value 1 for each node as feature augmentation.
+        # x = [[1] for i in range(num_nodes)]
+        # x = torch.Tensor(x)
 
         # 2. Add position anchor sets, node features are the distances to the sets.
-        
+        df = pd.read_csv(file_path, sep=',', header=None)
+        dfdist = df.iloc[:, 1:157]
+        x = torch.Tensor(dfdist.values)
         return x
     
     def get_edge_index(self, file_path: str) -> torch.LongTensor:
@@ -139,16 +149,18 @@ class PagenetDataset(Dataset):
 
 
 # %% test the dataset 
-root = "data/"
-dataset = PagenetDataset(root)
-data = dataset.get()
+root = "./data/"
+dataset = USLGCdataset(root)
+
 
 # %% examine the graph
-print(f'Dataset: {data}:')
+print(f'Dataset: {dataset}:')
 print('======================')
-print(f'Number of graphs: {len(data)}')
-print(data)
+print(f'Number of graphs: {len(dataset)}')
+print(dataset)
 print('===========================================================================================================')
+data = dataset.data
+print(data)
 
 # Gather some statistics about the graph.
 print(f'Number of nodes: {data.num_nodes}')
@@ -160,10 +172,18 @@ print(f'Number of training nodes: {data.train_mask.sum()}')
 print(f'Number of validation nodes: {data.val_mask.sum()}')
 print(f'Number of testing nodes: {data.test_mask.sum()}')
 print(f'Training node label rate: {int(data.train_mask.sum()) / data.num_nodes:.2f}')
-# print(f'Has isolated nodes: {data.has_isolated_nodes()}')
-# print(f'Has self-loops: {data.has_self_loops()}')
-# print(f'Is undirected: {data.is_undirected()}')
+print(f'Has isolated nodes: {data.has_isolated_nodes()}') #false
+print(f'Has self-loops: {data.has_self_loops()}') #true
+print(f'Is undirected: {data.is_undirected()}') #false
+# print(data.x[0:5])
+# print(data.y[0:5])
 # %%
+# transform = torch_geometric.transforms.RandomNodeSplit(split='random',
+#                                            num_train_per_class=100000,
+#                                            num_val=0.05,
+#                                            num_test=0.05)
+# data = transform(data)
+print(data)
 
 loader = torch_geometric.loader.NeighborLoader(
     data,
@@ -181,3 +201,5 @@ for data in loader:
     print(data) #  Output data by batch 
     count += 1
     if count == 2: break
+
+# %%

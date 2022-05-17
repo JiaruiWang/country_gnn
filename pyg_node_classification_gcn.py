@@ -1,4 +1,4 @@
-'''Copied from PyG tutorial 2 Node Classification
+'''References from PyG tutorial 2 Node Classification
 https://colab.research.google.com/drive/14OvFnAXggxB8vM4e8vSURUp1TaKnovzX?usp=sharing#scrollTo=yhofzjaqhfY2
 This tutorial uses simple 2 layer GCNconv, will cause GPU out of memory.
 '''
@@ -55,14 +55,14 @@ from torch.nn import Linear
 import torch.nn.functional as F
 
 # %%
-from torch_geometric.nn import GCNConv
+from torch_geometric.nn import GCNConv, SAGEConv
 
 class GCN(torch.nn.Module):
     def __init__(self, hidden_channels):
         super().__init__()
         torch.manual_seed(1234567)
-        self.conv1 = GCNConv(data.num_features, hidden_channels)
-        self.conv2 = GCNConv(hidden_channels, data.num_classes)
+        self.conv1 = SAGEConv(data.num_features, hidden_channels)
+        self.conv2 = SAGEConv(hidden_channels, data.num_classes)
 
     def forward(self, x, edge_index):
         x = self.conv1(x, edge_index)

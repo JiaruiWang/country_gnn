@@ -7,7 +7,7 @@ import torch_geometric
 from torch_geometric.data import Data, Dataset
 
 # %% Define PagenetDataset
-class PagenetDataset(Dataset):
+class USLGCdataset(Dataset):
     def __init__(self, root, transform=None, pre_transform=None, pre_filter=None):
         '''Initialization.
         Args:
@@ -21,14 +21,15 @@ class PagenetDataset(Dataset):
         '''Get raw data file names in the './data/raw_dir/'.
         '''
 
-        return ['edge_index.csv', 'c_label.csv', 'c_tr.csv', 'c_va.csv', 'c_te.csv']
-
+        return ['us_edges_lgc.csv', 
+                'us_lgc_2_hop_bfs_voting_label_correct_2nd.csv', 
+                'dist_list_idx+52_in_out_all.csv']
     @property
     def processed_file_names(self):
         '''Generated dataset file names saved in the './data/processed_dir/'.
         '''
 
-        return ['page_net_total_disk_node_feat_1.pt']
+        return ['us_lgc_in_disk_dataset.pt']
 
     # @property
     # def num_nodes(self):
@@ -44,7 +45,7 @@ class PagenetDataset(Dataset):
         return len(self.processed_file_names)
 
     def get(self, idx=None):
-        data = torch.load(osp.join(self.processed_dir, f'page_net_total_disk_node_feat_1.pt'))
+        data = torch.load(osp.join(self.processed_dir, f'us_lgc_in_disk_dataset.pt'))
         return data
 
     def process(self):
@@ -52,16 +53,18 @@ class PagenetDataset(Dataset):
         # for raw_path in self.raw_paths:
         #     # Read data from `raw_path`.
         #     # Every sub dir in './data/raw_dir/' for each dataset.
-
-        x = self.get_node_feature()
-        edge_index = self.get_edge_index('./data/raw_dir/edge_index.csv')
-        y = self.get_y_label('./data/raw_dir/c_label.csv')
-
-        self.data = Data(x=x, edge_index=edge_index, y=y)
-        self.data.train_mask = self.get_masks('./data/raw_dir/c_tr.csv')
-        self.data.val_mask = self.get_masks('./data/raw_dir/c_va.csv')
-        self.data.test_mask = self.get_masks('./data/raw_dir/c_te.csv')
-        self.data.num_classes = 243
+        world_edge_index = self.get_edge_index('./data/raw_dir/edge_index.csv')
+        us_lgc_mask_in_world = self.get_masks('./data/raw_dir/us_lgc_mask_in_world.csv')
+        print(us_lgc_mask_in_world.shape)
+        us_edge_index, attr = torch_geometric.utils.subgraph(subset=us_lgc_mask_in_world, 
+                                                             edge_index=world_edge_index,
+                                                             relabel_nodes=True)
+        print(us_edge_index.shape, us_edge_index)
+        us_x = self.get_node_feature('./data/raw_dir/dist_list_idx+52_in_out_all.csv')
+        us_y = self.get_y_label('./data/raw_dir/us_lgc_2_hop_bfs_voting_label_correct_2nd.csv')
+        
+        self.data = Data(x=us_x, edge_index=us_edge_index, y=us_y)
+        self.num_classes = 53
         
         # data.num_classes = 243
 
@@ -74,7 +77,7 @@ class PagenetDataset(Dataset):
         # torch.save(data, osp.join(self.processed_dir, f'data_{idx}.pt'))
         # idx += 1
 
-        torch.save(self.data, osp.join(self.processed_dir, f'page_net_total_disk_node_feat_1.pt'))
+        torch.save(self.data, osp.join(self.processed_dir, f'us_lgc_in_disk_dataset.pt'))
         return self.data
 
         
@@ -87,14 +90,16 @@ class PagenetDataset(Dataset):
             x: A torch.Tensor with shape (num_nodes, num_node_features).
         '''
             
-        num_nodes = 60924683
+        # num_nodes = 60924683
 
-        # 1. Just add constant value 1 for each node as feature augmentation.
-        x = [[1] for i in range(num_nodes)]
-        x = torch.Tensor(x)
+        # # 1. Just add constant value 1 for each node as feature augmentation.
+        # x = [[1] for i in range(num_nodes)]
+        # x = torch.Tensor(x)
 
         # 2. Add position anchor sets, node features are the distances to the sets.
-        
+        df = pd.read_csv(file_path, sep=',', header=None)
+        dfdist = df.iloc[:, 1:157]
+        x = torch.Tensor(dfdist.values)
         return x
     
     def get_edge_index(self, file_path: str) -> torch.LongTensor:
@@ -140,7 +145,7 @@ class PagenetDataset(Dataset):
 
 # %% test the dataset 
 root = "data/"
-dataset = PagenetDataset(root)
+dataset = USLGCdataset(root)
 data = dataset.get()
 
 # %% examine the graph
@@ -181,3 +186,4 @@ for data in loader:
     print(data) #  Output data by batch 
     count += 1
     if count == 2: break
+# %%
