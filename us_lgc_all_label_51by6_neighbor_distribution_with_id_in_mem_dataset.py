@@ -8,7 +8,7 @@ import torch_geometric
 from torch_geometric.data import InMemoryDataset, Data
 
 # %% Define PagenetDataset
-class USLGCdataset(InMemoryDataset):
+class USLGCDistributionFeaturesWithIdDataset(InMemoryDataset):
     def __init__(self, root, transform=None, pre_transform=None, pre_filter=None):
         '''Initialization.
         Args:
@@ -16,7 +16,7 @@ class USLGCdataset(InMemoryDataset):
         '''
 
         super().__init__(root, transform, pre_transform, pre_filter)
-        self.data = torch.load(osp.join(self.processed_dir, f'us_lgc_in_mem_dataset.pt'))
+        self.data = torch.load(osp.join(self.processed_dir, f'us_lgc_all_label_51by6_neighbor_distribution_with_id_in_mem_dataset.pt'))
     @property
     def raw_file_names(self):
         '''Get raw data file names in the './data/raw_dir/'.
@@ -31,7 +31,7 @@ class USLGCdataset(InMemoryDataset):
         '''Generated dataset file names saved in the './data/processed_dir/'.
         '''
 
-        return ['us_lgc_in_mem_dataset.pt']
+        return ['us_lgc_all_label_51by6_neighbor_distribution_with_id_in_mem_dataset.pt']
 
     # @property
     # def num_nodes(self):
@@ -56,21 +56,24 @@ class USLGCdataset(InMemoryDataset):
         #     # Read data from `raw_path`.
         #     # Every sub dir in './data/raw_dir/' for each dataset.
 
-        world_edge_index = self.get_edge_index('./data/raw_dir/edge_index.csv')
-        us_lgc_mask_in_world = self.get_masks('./data/raw_dir/us_lgc_mask_in_world.csv')
+        # world_edge_index = self.get_edge_index('./data/raw_dir/edge_index.csv')
+        # us_lgc_mask_in_world = self.get_masks('./data/raw_dir/us_pages_lgc_mask_in_world.csv')
         # print(us_lgc_mask_in_world.shape)
-        us_edge_index, attr = torch_geometric.utils.subgraph(subset=us_lgc_mask_in_world, 
-                                                             edge_index=world_edge_index,
-                                                             relabel_nodes=True)
+        # us_edge_index, attr = torch_geometric.utils.subgraph(subset=us_lgc_mask_in_world, 
+        #                                                      edge_index=world_edge_index,
+        #                                                      relabel_nodes=True)
         # edge = us_edge_index.numpy().T
         # print(edge.shape, type(edge))
         # print(edge)
         # np.savetxt("./data/raw_dir/us_edges_lgc_relabeled.csv", edge, delimiter='\t',fmt='%i')
         
-        us_x = self.get_node_feature('./data/raw_dir/normalized_dist_list_idx+52_in_out_all.csv')
-        us_y = self.get_y_label('./data/raw_dir/us_lgc_2_hop_bfs_voting_label_correct_2nd.csv')
+        us_edge_index = self.get_edge_index('./data/raw_dir/us_edges_lgc_relabeled.csv')
+        us_x = self.get_node_feature('./data/raw_dir/us_lgc_51_by_6_neighbor_distribution.csv')
+        us_y = self.get_y_label('./data/raw_dir/us_pages_lgc_true_label_51_label.csv')
+        us_id = self.get_id('./data/raw_dir/us_pages_lgc_idx_id_mask_label_state.csv')
         self.data = Data(x=us_x, edge_index=us_edge_index, y=us_y)
-        self.data.num_classes = 53
+        self.data.num_classes = 51
+        self.data.id = us_id
         # if self.pre_filter is not None and not self.pre_filter(data):
         #     continue
 
@@ -84,7 +87,7 @@ class USLGCdataset(InMemoryDataset):
         # print("In process data and slices:")
         # print(data)
         # print(slices)
-        torch.save(self.data, osp.join(self.processed_dir, f'us_lgc_in_mem_dataset.pt'))
+        torch.save(self.data, osp.join(self.processed_dir, f'us_lgc_all_label_51by6_neighbor_distribution_with_id_in_mem_dataset.pt'))
 
         
     def get_node_feature(self, file_path: str = None) -> torch.Tensor:
@@ -104,10 +107,11 @@ class USLGCdataset(InMemoryDataset):
 
         # 2. Add position anchor sets, node features are the distances to the sets.
         df = pd.read_csv(file_path, sep=',', header=None)
-        dfdist = df.iloc[:, 1:157]
-        x = torch.Tensor(dfdist.values)
+        x = torch.Tensor(df.values)
+        print(x.shape)
+        print(x[0:10])
         return x
-    
+
     def get_edge_index(self, file_path: str) -> torch.LongTensor:
         '''Graph connectivity in COO format with shape [2, num_edges].
 
@@ -132,10 +136,34 @@ class USLGCdataset(InMemoryDataset):
         '''
 
         df = pd.read_csv(file_path, sep='\t', header=None)
+        df = df.iloc[:, 1:2]
         # df.to_csv('./data/raw_dir/us_pages_lgc_with_new_label.csv', sep='\t', index=True,
         #           header=False)
         y = torch.LongTensor(df.T.values[0])
+        print(y.shape)
+        print(y[0:10])
+    
         return y
+
+    def get_id(self, file_path: str) -> torch.LongTensor:
+        '''Get id for each page.
+
+        Args:
+            file_path: A string of file path for the us_pages_lgc_idx_id_mask_label_state.csv
+            contains country labels.
+        Return:
+            id: A torch.Tensor with shape (num_nodes).
+        '''
+
+        df = pd.read_csv(file_path, sep='\t', header=None)
+        df = df.iloc[:, 1:2]
+        # df.to_csv('./data/raw_dir/us_pages_lgc_with_new_label.csv', sep='\t', index=True,
+        #           header=False)
+        id = torch.LongTensor(df.T.values[0])
+        print(id.shape)
+        print(id[0:10])
+    
+        return id
 
     def get_masks(self, file_path: str) -> torch.Tensor:
         '''Get masks for train, validation or test.
@@ -153,7 +181,7 @@ class USLGCdataset(InMemoryDataset):
 
 # %% test the dataset 
 root = "./data/"
-dataset = USLGCdataset(root)
+dataset = USLGCDistributionFeaturesWithIdDataset(root)
 
 
 # # # %% examine the graph

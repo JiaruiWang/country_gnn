@@ -37,12 +37,12 @@ print('=========================================================================
 # slices = dataset.slices
 data = dataset.data
 print(data.x[0:1])
-data.x = data.x[:, [i*3 + 2 for i in range(52)]]
+# data.x = data.x[:, [i*3 + 2 for i in range(52)]]
 # print(data.x)
 transform = T.RandomNodeSplit(split='random',
-                              num_train_per_class=100000,
-                              num_val=0.05,
-                              num_test=0.05)
+                              num_train_per_class=20000,
+                              num_val=2450000,
+                              num_test=2450000)
 data = transform(data)
 print(f'Data in the {dataset} :\n {data}')
 # print(f'Slices in the {dataset} :\n {slices}')
@@ -77,11 +77,11 @@ print(f'Training node label rate: {int(data.train_mask.sum()) / data.num_nodes:.
 # %% 
 # Sample batched data for train, val, and test
 
-train_loader = NeighborLoader(data, num_neighbors=[-1] * 2, batch_size=1280,
+train_loader = NeighborLoader(data, num_neighbors=[-1] * 2, batch_size=16384,
                                 input_nodes=data.train_mask)
-val_loader = NeighborLoader(data, num_neighbors=[-1] * 2, batch_size=128, 
+val_loader = NeighborLoader(data, num_neighbors=[-1] * 2, batch_size=2450000, 
                                 input_nodes=data.val_mask)
-test_loader = NeighborLoader(data, num_neighbors=[-1] * 2, batch_size=128,
+test_loader = NeighborLoader(data, num_neighbors=[-1] * 2, batch_size=2450000,
                                 input_nodes=data.test_mask)
 # %%
 # Show batched data in loader
@@ -154,7 +154,7 @@ class Sage(torch.nn.Module):
         
         return x
 
-model = Sage(hidden_channels=64)
+model = Sage(hidden_channels=2*data.num_features)
 model = model.to(device)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01 )# ,  weight_decay=5e-4)
@@ -168,23 +168,24 @@ def train():
     model.train()
 
     total_loss = total_examples = 0
+    for sampled_data in train_loader:
     # for sampled_data in tqdm.tqdm(train_loader):
-    #     sampled_data = sampled_data.to(device)
-    sampled_data = data.to(device)
-    # print(sampled_data)
-    adj = SparseTensor(row=sampled_data.edge_index[0], col=sampled_data.edge_index[1],
-                       sparse_sizes=(sampled_data.num_nodes, sampled_data.num_nodes))
-    optimizer.zero_grad()
-    out = model(sampled_data.x, adj.t())
-    loss = criterion(out[sampled_data.train_mask], 
-                        sampled_data.y[sampled_data.train_mask])
-    # loss = criterion(out[:sampled_data.batch_size], 
-    #                     sampled_data.y[:sampled_data.batch_size])
-    loss.backward()
-    optimizer.step()
-    
-    total_loss += loss
-    total_examples += sampled_data.train_mask.sum()
+        sampled_data = sampled_data.to(device)
+        # sampled_data = data.to(device)
+        # print(sampled_data)
+        adj = SparseTensor(row=sampled_data.edge_index[0], col=sampled_data.edge_index[1],
+                        sparse_sizes=(sampled_data.num_nodes, sampled_data.num_nodes))
+        optimizer.zero_grad()
+        out = model(sampled_data.x, adj.t())
+        loss = criterion(out[:sampled_data.batch_size], 
+                            sampled_data.y[:sampled_data.batch_size])
+        # loss = criterion(out[:sampled_data.batch_size], 
+        #                     sampled_data.y[:sampled_data.batch_size])
+        loss.backward()
+        optimizer.step()
+        
+        total_loss += loss
+        total_examples += sampled_data.batch_size
 
     return total_loss / total_examples
 
@@ -194,10 +195,11 @@ def train():
 def test():
     model.eval()
     accs = []
-    # for loader in [train_loader, val_loader, test_loader]:
-    loader = train_loader # batch size 128: 5.5min
+
+    loader = train_loader 
     correct_sum, mask_sum = 0, 0
-    for sampled_data in tqdm.tqdm(loader):
+    for sampled_data in loader:
+    # for sampled_data in tqdm.tqdm(loader):
         sampled_data = sampled_data.to(device)
         adj = SparseTensor(row=sampled_data.edge_index[0], col=sampled_data.edge_index[1],
                            sparse_sizes=(sampled_data.num_nodes, sampled_data.num_nodes))
@@ -213,11 +215,14 @@ def test():
 
     loader = val_loader
     correct_sum, mask_sum = 0, 0
-    for sampled_data in tqdm.tqdm(loader):
-        out = model(sampled_data.x.to(device), sampled_data.edge_index.to(device))
+    for sampled_data in loader:
+    # for sampled_data in tqdm.tqdm(loader):
+        sampled_data = sampled_data.to(device)
+        adj = SparseTensor(row=sampled_data.edge_index[0], col=sampled_data.edge_index[1],
+                           sparse_sizes=(sampled_data.num_nodes, sampled_data.num_nodes))
+        out = model(sampled_data.x, adj.t())
         pred = out.argmax(dim=1)  # Use the class with highest probability.
-        y = sampled_data.y.to(device)
-        correct = pred[:sampled_data.batch_size] == y[:sampled_data.batch_size]  # Check against ground-truth labels.
+        correct = pred[:sampled_data.batch_size] == sampled_data.y[:sampled_data.batch_size]  # Check against ground-truth labels.
         correct_sum += int(correct.sum()) 
         mask_sum += int(sampled_data.batch_size)
     print(correct_sum, mask_sum)
@@ -225,24 +230,109 @@ def test():
 
     loader = test_loader
     correct_sum, mask_sum = 0, 0
-    for sampled_data in tqdm.tqdm(loader):
-        out = model(sampled_data.x.to(device), sampled_data.edge_index.to(device))
+    for sampled_data in loader:
+    # for sampled_data in tqdm.tqdm(loader):
+        sampled_data = sampled_data.to(device)
+        adj = SparseTensor(row=sampled_data.edge_index[0], col=sampled_data.edge_index[1],
+                           sparse_sizes=(sampled_data.num_nodes, sampled_data.num_nodes))
+        out = model(sampled_data.x, adj.t())
         pred = out.argmax(dim=1)  # Use the class with highest probability.
-        y = sampled_data.y.to(device)
-        correct = pred[:sampled_data.batch_size] == y[:sampled_data.batch_size]  # Check against ground-truth labels.
+        correct = pred[:sampled_data.batch_size] == sampled_data.y[:sampled_data.batch_size]  # Check against ground-truth labels.
         correct_sum += int(correct.sum()) 
         mask_sum += int(sampled_data.batch_size)
     print(correct_sum, mask_sum)
     accs.append(correct_sum / mask_sum) # Derive ratio of correct predictions.
 
+    torch.cuda.empty_cache()
     return accs
 
 # %%
 # Start training
-for epoch in range(1, 2000):
+for epoch in range(1, 300):
     loss = train()
     print(f'Epoch: {epoch:03d}, Loss: {loss:.10f}')
-    if epoch % 100 == 0:
-        train_acc, val_acc, test_acc = test()
+    if epoch % 10 == 0:
+        train_acc, val_acc, test_acc  = test()
         print(f'Train: {train_acc:.4f}, Val: {val_acc:.4f}, Test: {test_acc:.4f}')
+# %%
+
+# %%
+# Define prediction distribution check function()
+@torch.no_grad()
+def get_pred_classes_count():
+    model.eval()
+    accs = []
+    total_class_count = [0 for i in range(53)]
+    correct_class_count = [0 for i in range(53)]
+    loader = train_loader 
+    correct_sum, mask_sum = 0, 0
+    for sampled_data in loader:
+        sampled_data = sampled_data.to(device)
+        adj = SparseTensor(row=sampled_data.edge_index[0], col=sampled_data.edge_index[1],
+                           sparse_sizes=(sampled_data.num_nodes, sampled_data.num_nodes))
+        out = model(sampled_data.x, adj.t())
+        # out = model(sampled_data.x.to(device), sampled_data.edge_index.to(device))
+        pred = out.argmax(dim=1)  # Use the class with highest probability.
+        # y = sampled_data.y.to(device)
+        correct = pred[:sampled_data.batch_size] == sampled_data.y[:sampled_data.batch_size]  # Check against ground-truth labels.
+        correct_sum += int(correct.sum()) 
+        mask_sum += int(sampled_data.batch_size)
+
+        for i in range(sampled_data.batch_size):
+            total_class_count[pred[i].item()] += 1
+            if correct[i] == True:
+                correct_class_count[pred[i]] += 1
+    print(correct_sum, mask_sum)
+    accs.append(correct_sum / mask_sum) # Derive ratio of correct predictions.
+
+    loader = val_loader
+    correct_sum, mask_sum = 0, 0
+    for sampled_data in loader:
+        sampled_data = sampled_data.to(device)
+        adj = SparseTensor(row=sampled_data.edge_index[0], col=sampled_data.edge_index[1],
+                           sparse_sizes=(sampled_data.num_nodes, sampled_data.num_nodes))
+        out = model(sampled_data.x, adj.t())
+        pred = out.argmax(dim=1)  # Use the class with highest probability.
+        correct = pred[:sampled_data.batch_size] == sampled_data.y[:sampled_data.batch_size]  # Check against ground-truth labels.
+        correct_sum += int(correct.sum()) 
+        mask_sum += int(sampled_data.batch_size)
+
+        for i in range(sampled_data.batch_size):
+            total_class_count[pred[i].item()] += 1
+            if correct[i] == True:
+                correct_class_count[pred[i]] += 1
+    print(correct_sum, mask_sum)
+    accs.append(correct_sum / mask_sum) # Derive ratio of correct predictions.
+
+    loader = test_loader
+    correct_sum, mask_sum = 0, 0
+    for sampled_data in loader:
+        sampled_data = sampled_data.to(device)
+        adj = SparseTensor(row=sampled_data.edge_index[0], col=sampled_data.edge_index[1],
+                           sparse_sizes=(sampled_data.num_nodes, sampled_data.num_nodes))
+        out = model(sampled_data.x, adj.t())
+        pred = out.argmax(dim=1)  # Use the class with highest probability.
+        correct = pred[:sampled_data.batch_size] == sampled_data.y[:sampled_data.batch_size]  # Check against ground-truth labels.
+        correct_sum += int(correct.sum()) 
+        mask_sum += int(sampled_data.batch_size)
+
+        for i in range(sampled_data.batch_size):
+            total_class_count[pred[i].item()] += 1
+            if correct[i] == True:
+                correct_class_count[pred[i]] += 1
+    print(correct_sum, mask_sum)
+    accs.append(correct_sum / mask_sum) # Derive ratio of correct predictions.
+
+    torch.cuda.empty_cache()
+    return accs, total_class_count, correct_class_count
+
+# %%
+# show pred classes distribution
+accs, total_class_count, correct_class_count = get_pred_classes_count()
+for i in range(53):
+    print(i,':',total_class_count[i],' ', end='')
+print()
+for i in range(53):
+    print(i,':',correct_class_count[i],' ', end='')
+print()
 # %%

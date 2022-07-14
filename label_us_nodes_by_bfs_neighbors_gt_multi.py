@@ -367,8 +367,8 @@ def multi_th_func_no_neg_1(split_range, dup_count):
         '''should use row['label'] = -1 to replace shared_labels[n] != -1.
         But shared_labels[n] != -1 didn't change the original ground truth labels (labels not equal to -1,
         which needs to be predicted). Means this 2 hop bfs labeling has very good result on the ground truth
-        data, 100% correctness.  
-        Run
+        data, 100% correctness.  Wrong: because labels[n] != -1 means the dup states for the city is only one, 
+        which means the candidatte state is only 1 in the get_neighbors_most_label(). 
         '''
         # should use row['label'] to replace shared_labels[n] != -1 this didn't change the original ground truth label.
         if shared_labels[n] != -1: continue 

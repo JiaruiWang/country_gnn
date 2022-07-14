@@ -1,5 +1,4 @@
 # %%
-from unittest import result
 import mysql.connector
 import pandas as pd
 
@@ -9,7 +8,7 @@ import pandas as pd
 mydb = mysql.connector.connect(
   host="localhost",
   user="jerry",
-  password="password",
+  password="0000",
   database="pagenet"
 )
 mycursor = mydb.cursor()

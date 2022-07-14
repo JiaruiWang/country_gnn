@@ -1,0 +1,52 @@
+Dataset: USLGCDistributionFeaturesTrueLabelDataset():
+======================
+Number of graphs: 1
+===============================================================================
+Data in the USLGCDistributionFeaturesTrueLabelDataset() :
+ Data(x=[5873395, 306], edge_index=[2, 84480575], y=[5873395], num_classes=51, labeled_mask=[5873395], train_mask=[5873395], val_mask=[5873395], test_mask=[5873395])
+Number of nodes: 5873395
+Number of features: 306
+Number of classes: 51
+Number of edges: 84480575
+Average node degree: 14.38
+Number of training nodes: 1865787
+Number of validation nodes: 233000
+Number of testing nodes: 233000
+Training node label rate: 0.32
+Step 1:
+=======
+Number of nodes in the current batch: 559269
+Data(x=[559269, 306], edge_index=[2, 1093724], y=[559269], num_classes=51, labeled_mask=[559269], train_mask=[559269], val_mask=[559269], test_mask=[559269], batch_size=32768)
+tensor(219679)
+tensor(23847)
+tensor(23768)
+
+Step 2:
+=======
+Number of nodes in the current batch: 559718
+Data(x=[559718, 306], edge_index=[2, 1097778], y=[559718], num_classes=51, labeled_mask=[559718], train_mask=[559718], val_mask=[559718], test_mask=[559718], batch_size=32768)
+tensor(219538)
+tensor(24143)
+tensor(23930)
+
+Iterated over 1118987 of 5873395 nodes!
+Step 1:
+=======
+Number of nodes in the current batch: 352157
+Data(x=[352157, 306], edge_index=[2, 705950], y=[352157], num_classes=51, labeled_mask=[352157], train_mask=[352157], val_mask=[352157], test_mask=[352157], batch_size=64)
+tensor(122358)
+tensor(15236)
+tensor(15323)
+
+Step 2:
+=======
+Number of nodes in the current batch: 366550
+Data(x=[366550, 306], edge_index=[2, 689155], y=[366550], num_classes=51, labeled_mask=[366550], train_mask=[366550], val_mask=[366550], test_mask=[366550], batch_size=64)
+tensor(123878)
+tensor(15270)
+tensor(15472)
+
+Iterated over 718707 of 5873395 nodes!
+Now using device:  cuda
+306 51
+Epoch: 001, Loss: 1.2248350382
