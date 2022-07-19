@@ -23,6 +23,8 @@ from torch_geometric.nn import SAGEConv, GraphSAGE, GCNConv, GraphConv
 from torch_geometric.utils import degree
 import torch_geometric.transforms as T
 from sklearn.metrics import classification_report
+from sklearn.utils.class_weight import compute_class_weight
+import numpy as np
 
 from us_lgc_all_label_51by6_neighbor_distribution_in_mem_dataset import USLGCDistributionFeaturesDataset
 EPS = 1e-15
@@ -84,7 +86,12 @@ print(f'Training node label rate: {int(data.train_mask.sum()) / data.num_nodes:.
 +----------------------------+------------------------+
 '''
 # %%
-
+y_label = data.y.numpy()
+print(y_label.shape)
+print(np.unique(y_label))
+weight = compute_class_weight(class_weight='balanced', classes=np.unique(y_label), y=y_label)
+print(weight)
+weight = torch.tensor(weight).float()
 # %% 
 # Sample batched data for train, val, and test
 # train_loader = GraphSAINTRandomWalkSampler(data, batch_size=600000, walk_length=2,
@@ -196,9 +203,10 @@ class Net(torch.nn.Module):
 # %%
 model = Net(hidden_channels=data.num_features)
 model = model.to(device)
+weight = weight.to(device)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01  ,  weight_decay=5e-4)
-criterion = torch.nn.CrossEntropyLoss()
+criterion = torch.nn.CrossEntropyLoss(reduction='mean', weight=weight)
 # criterion = F.nll_loss()
 # https://stackoverflow.com/questions/65192475/pytorch-logsoftmax-vs-softmax-for-crossentropyloss
 
@@ -224,6 +232,8 @@ def train():
             out = model(data.x, adj.t(), edge_weight)
             # loss = F.nll_loss(out, data.y, reduction='none')
             loss = F.cross_entropy(out, data.y, reduction='none')
+            # loss = F.cross_entropy(out, data.y, reduction='mean')
+            # loss = criterion(out, data.y)
             loss = (loss * data.node_norm)[data.train_mask].sum()
         else:
             out = model(data.x, adj.t())
@@ -319,7 +329,7 @@ for epoch in range(1, 300):
     if loss < min_loss:
         min_loss = loss
         best_model_state = deepcopy(model.state_dict())
-
+#%%
 print('min_loss',  min_loss)
 
 # %%
@@ -336,6 +346,7 @@ model_copy.to(device)
 cpu = torch.device('cpu')
 # %%
 model.to(cpu)
+weight.to(cpu)
 
 # %%
 # define inference()

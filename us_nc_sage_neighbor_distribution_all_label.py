@@ -21,6 +21,8 @@ from torch_geometric.loader import NeighborLoader, ImbalancedSampler
 from torch_geometric.nn import SAGEConv, GraphSAGE, GCNConv
 import torch_geometric.transforms as T
 from sklearn.metrics import classification_report
+from sklearn.utils.class_weight import compute_class_weight
+import numpy as np
 
 from us_lgc_all_label_51by6_neighbor_distribution_in_mem_dataset import USLGCDistributionFeaturesDataset
 EPS = 1e-15
@@ -77,7 +79,12 @@ print(f'Training node label rate: {int(data.train_mask.sum()) / data.num_nodes:.
 +----------------------------+------------------------+
 '''
 # %%
-
+y_label = data.y.numpy()
+print(y_label.shape)
+print(np.unique(y_label))
+weight = compute_class_weight(class_weight='balanced', classes=np.unique(y_label), y=y_label)
+print(weight)
+weight = torch.tensor(weight).float()
 # %% 
 # Sample batched data for train, val, and test
 sampler = ImbalancedSampler(data, input_nodes=data.train_mask)
@@ -90,7 +97,7 @@ val_loader = NeighborLoader(data, num_neighbors=[-1] * 2, batch_size=8192,
                                 input_nodes=data.val_mask)
 test_loader = NeighborLoader(data, num_neighbors=[-1] * 2, batch_size=8192,
                                 input_nodes=data.test_mask)
-total_labeled_loader = NeighborLoader(data, num_neighbors=[-1] * 1, batch_size=2)
+total_labeled_loader = NeighborLoader(data, num_neighbors=[-1] * 2, batch_size=1)
 # %%
 # Show batched data in loader
 total_num_nodes = 0
@@ -166,10 +173,11 @@ class Sage(torch.nn.Module):
 
 model = Sage(hidden_channels=data.num_features)
 model = model.to(device)
+weight = weight.to(device)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001  ,  weight_decay=5e-4)
-criterion = torch.nn.CrossEntropyLoss()
-
+# criterion = torch.nn.CrossEntropyLoss()
+criterion = torch.nn.CrossEntropyLoss(reduction='mean', weight=weight)
 
 
 # %%
@@ -189,8 +197,6 @@ def train():
         out = model(sampled_data.x, adj.t())
         loss = criterion(out[:sampled_data.batch_size], 
                             sampled_data.y[:sampled_data.batch_size])
-        # loss = criterion(out[:sampled_data.batch_size], 
-        #                     sampled_data.y[:sampled_data.batch_size])
         loss.backward()
         optimizer.step()
         
@@ -380,7 +386,7 @@ print('min_loss',  min_loss)
 
 # %%
 # Save the model
-PATH = './model/sage_all_label/sage_all_label.pt'
+PATH = './model/sage_all_label/sage_all_label_cross_mean_weighted.pt'
 torch.save(best_model_state, PATH)
 
 
@@ -394,6 +400,7 @@ cpu = torch.device('cpu')
 
 # %%
 model.to(cpu)
+weight.to(cpu)
 # %%
 # define inference()
 @torch.no_grad()
