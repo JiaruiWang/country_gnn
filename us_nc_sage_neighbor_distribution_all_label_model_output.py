@@ -318,6 +318,6 @@ import pandas as pd
 outdf = pd.DataFrame(output_list)
 print(outdf.shape)
 print(outdf[0:1])
-outputfile = "./model/sage_all_label/sage_id_y_pred_51probability.csv"
+outputfile = "./model/sage_all_label/sage_id_y_pred_51probability_test2.csv"
 outdf.to_csv(outputfile, sep=',', header=False, index=False)
 #%%

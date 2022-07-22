@@ -385,7 +385,7 @@ outdf = pd.DataFrame(output_list)
 # %%
 print(outdf[0:1])
 # %%
-outputfile = "./model/saint_all_label/saint_id_y_pred_51probability.csv"
+outputfile = "./model/saint_all_label/saint_id_y_pred_51probability_test2.csv"
 outdf.to_csv(outputfile, sep=',', header=False, index=False)
 # %%
 print(outdf.shape)

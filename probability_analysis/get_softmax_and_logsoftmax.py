@@ -2,6 +2,7 @@
 import pandas as pd
 import os.path as osp
 import numpy as np
+import jenkspy
 from scipy.special import softmax
 
 # %%
@@ -33,5 +34,13 @@ m = softmax(n, axis=1)
 
 print(m.shape)
 #%%
-print(m[0:20])
+
+print(m[0:1][0])
 # %%
+jnk = jenkspy.JenksNaturalBreaks(nb_class=2)
+jnk.fit(m[6:7][0])
+
+print(jnk.labels_)
+print(jnk.groups_)
+print(jnk.inner_breaks_)
+#%%
