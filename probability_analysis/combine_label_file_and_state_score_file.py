@@ -5,11 +5,11 @@ import numpy as np
 
 
 # %%
-file_path1 = './data/raw_dir/us_pages_lgc_true_label_51_label.csv'
+file_path1 = '../data/raw_dir/us_pages_lgc_true_label_51_label.csv'
 twolabel = pd.read_csv(file_path1, sep='\t', header=None)
-file_path2 = './data/raw_dir/us_pages_lgc_idx_id_mask_label_state.csv'
+file_path2 = '../data/raw_dir/us_pages_lgc_idx_id_mask_label_state.csv'
 fivelabel = pd.read_csv(file_path2, sep='\t', header=None)
-out_pa = './model/saint_all_label/id_y_pred_51probability.csv'
+out_pa = '../model/saint_all_label/saint_id_y_pred_51probability_setseed_test1.csv'
 out1 = pd.read_csv(out_pa, sep=',', header=None)
 # %%
 two = twolabel.values
@@ -38,7 +38,7 @@ for i in range(5873395):
         print(i)
 
 #%%
-outputfile = "./model/saint_all_label/idx_id_mask_label_state_id_y_pred_51probability.csv"
+outputfile = "../model/saint_all_label/saint_idx_id_mask_label_state_id_y_pred_51probability_setseed.csv"
 total.to_csv(outputfile, sep=',', header=False, index=False)
 # %%
 count_mask = 0
