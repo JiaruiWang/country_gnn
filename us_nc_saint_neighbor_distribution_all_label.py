@@ -177,6 +177,7 @@ print('Now using device: ', device)
 class Net(torch.nn.Module):
     def __init__(self, hidden_channels):
         super().__init__()
+        torch.manual_seed(1234567)
         in_channels = data.num_features
         out_channels = data.num_classes
         self.conv1 = GraphConv(in_channels, hidden_channels)
@@ -334,8 +335,8 @@ print('min_loss',  min_loss)
 
 # %%
 # Save the model
-PATH = './model/saint_all_label/saint_all_label.pt'
-# torch.save(best_model_state, PATH)
+PATH = './model/saint_all_label/saint_all_label_train_with_set_seed.pt'
+torch.save(best_model_state, PATH)
 
 # %%
 # define the loaded model

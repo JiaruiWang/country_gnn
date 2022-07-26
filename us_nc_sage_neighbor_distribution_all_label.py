@@ -156,12 +156,12 @@ class Sage(torch.nn.Module):
         torch.manual_seed(1234567)
         self.conv1 = SAGEConv(in_channels=data.num_features, 
                               out_channels=hidden_channels,
-                              aggr="add",
-                              normalize=False)
+                              aggr="mean",
+                              normalize=True)
         self.conv2 = SAGEConv(in_channels=hidden_channels, 
                               out_channels=data.num_classes,
-                              aggr="add",
-                              normalize=False)
+                              aggr="mean",
+                              normalize=True)
 
     def forward(self, x, edge_index):
         x = self.conv1(x, edge_index)
@@ -386,7 +386,7 @@ print('min_loss',  min_loss)
 
 # %%
 # Save the model
-PATH = './model/sage_all_label/sage_all_label_cross_mean_weighted.pt'
+PATH = './model/sage_all_label/sage_all_label_aggr_mean_normalize.pt'
 torch.save(best_model_state, PATH)
 
 

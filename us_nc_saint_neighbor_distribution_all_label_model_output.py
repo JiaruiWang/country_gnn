@@ -38,41 +38,34 @@ print('======================')
 print(f'Number of graphs: {len(dataset)}')
 
 print('===============================================================================')
-# data = dataset.data
-# slices = dataset.slices
 data = dataset.data
-row, col = data.edge_index
-data.edge_weight = 1. / degree(col, data.num_nodes)[col]  # Norm by in-degree.
-use_normalization = True
-action='store_true'
+# row, col = data.edge_index
+# data.edge_weight = 1. / degree(col, data.num_nodes)[col]  # Norm by in-degree.
+# use_normalization = True
+# action='store_true'
 
-# print(data.x[0:1])
-# data.x = data.x[:, [i*3 + 2 for i in range(52)]]
-# print(data.x)
-transform = T.RandomNodeSplit(split='random',
-                              num_train_per_class=1000,
-                              num_val=590000,
-                              num_test=5232395)
-data = transform(data)
-temp = data.train_mask
-data.train_mask = data.test_mask
-data.test_mask = temp
-print(f'Data in the {dataset} :\n {data}')
-# print(f'Slices in the {dataset} :\n {slices}')
+# transform = T.RandomNodeSplit(split='random',
+#                               num_train_per_class=1000,
+#                               num_val=590000,
+#                               num_test=5232395)
+# data = transform(data)
+# temp = data.train_mask
+# data.train_mask = data.test_mask
+# data.test_mask = temp
+# print(f'Data in the {dataset} :\n {data}')
 
-# Gather some statistics about the graph.
-print(f'Number of nodes: {data.num_nodes}')
-print(f'Number of features: {data.num_features}')
-print(f'Number of classes: {data.num_classes}')
-print(f'Number of edges: {data.num_edges}')
-print(f'Average node degree: {data.num_edges / data.num_nodes:.2f}')
-print(f'Number of training nodes: {data.train_mask.sum()}')
-print(f'Number of validation nodes: {data.val_mask.sum()}')
-print(f'Number of testing nodes: {data.test_mask.sum()}')
-print(f'Training node label rate: {int(data.train_mask.sum()) / data.num_nodes:.2f}')
-# print(f'Has isolated nodes: {data.has_isolated_nodes()}') # True
-# print(f'Has self-loops: {data.has_self_loops()}') # True
-# print(f'Is undirected: {data.is_undirected()}') # False
+
+# # Gather some statistics about the graph.
+# print(f'Number of nodes: {data.num_nodes}')
+# print(f'Number of features: {data.num_features}')
+# print(f'Number of classes: {data.num_classes}')
+# print(f'Number of edges: {data.num_edges}')
+# print(f'Average node degree: {data.num_edges / data.num_nodes:.2f}')
+# print(f'Number of training nodes: {data.train_mask.sum()}')
+# print(f'Number of validation nodes: {data.val_mask.sum()}')
+# print(f'Number of testing nodes: {data.test_mask.sum()}')
+# print(f'Training node label rate: {int(data.train_mask.sum()) / data.num_nodes:.2f}')
+
 # %%
 '''
 +----------------------------+------------------------+
@@ -114,10 +107,10 @@ print(f'Training node label rate: {int(data.train_mask.sum()) / data.num_nodes:.
 #                                 input_nodes=data.train_mask)
 # val_loader = NeighborLoader(data, num_neighbors=[-1] * 2, batch_size=16384, 
                                 # input_nodes=data.val_mask)
-test_loader = NeighborLoader(data, num_neighbors=[-1] * 2, 
-                                # batch_size=16384,
-                                batch_size=1,
-                                input_nodes=data.test_mask)
+# test_loader = NeighborLoader(data, num_neighbors=[-1] * 2, 
+#                                 # batch_size=16384,
+#                                 batch_size=1,
+#                                 input_nodes=data.test_mask)
 total_labeled_loader = NeighborLoader(data, num_neighbors=[-1] * 2, batch_size=1)
 
 # %%
@@ -158,24 +151,24 @@ total_labeled_loader = NeighborLoader(data, num_neighbors=[-1] * 2, batch_size=1
 #         break
 # print(f'Iterated over {total_num_nodes} of {data.num_nodes} nodes!')
 
-total_num_nodes = 0
-count = 0
-for step, sub_data in enumerate(total_labeled_loader):
-    print(f'Step {step + 1}:')
-    print('=======')
-    print(f'Number of nodes in the current batch: {sub_data.num_nodes}')
-    print(sub_data)
-    print(sub_data.train_mask.sum())
-    print(sub_data.val_mask.sum())
-    print(sub_data.test_mask.sum())
-    print(sub_data.y[:sub_data.batch_size])
-    print(sub_data.id[:sub_data.batch_size])
-    print()
-    total_num_nodes += sub_data.num_nodes
-    count += 1
-    if count == 1:
-        break
-print(f'Iterated over {total_num_nodes} of {data.num_nodes} nodes!')
+# total_num_nodes = 0
+# count = 0
+# for step, sub_data in enumerate(total_labeled_loader):
+#     print(f'Step {step + 1}:')
+#     print('=======')
+#     print(f'Number of nodes in the current batch: {sub_data.num_nodes}')
+#     print(sub_data)
+#     print(sub_data.train_mask.sum())
+#     print(sub_data.val_mask.sum())
+#     print(sub_data.test_mask.sum())
+#     print(sub_data.y[:sub_data.batch_size])
+#     print(sub_data.id[:sub_data.batch_size])
+#     print()
+#     total_num_nodes += sub_data.num_nodes
+#     count += 1
+#     if count == 1:
+#         break
+# print(f'Iterated over {total_num_nodes} of {data.num_nodes} nodes!')
 
 # %% 
 # Define GraphSAGE model
@@ -194,6 +187,7 @@ print('Now using device: ', device)
 class Net(torch.nn.Module):
     def __init__(self, hidden_channels):
         super().__init__()
+        torch.manual_seed(1234567)
         in_channels = data.num_features
         out_channels = data.num_classes
         self.conv1 = GraphConv(in_channels, hidden_channels)
@@ -221,7 +215,7 @@ class Net(torch.nn.Module):
 
 # %%
 # Save the model
-PATH = './model/saint_all_label/saint_all_label.pt'
+PATH = './model/saint_all_label/saint_all_label_train_with_set_seed.pt'
 # torch.save(best_model_state, PATH)
 
 # %%
@@ -340,34 +334,6 @@ print(correct_sum, mask_sum)
 print(correct_sum / mask_sum) # Derive ratio of correct predictions.
 
 # %%
-
-print(len(id_total))              
-print(len(y_total))
-print(len(pred_total))
-print(len(out_total))
-
-
-# %%
-import sys
-# %%
-print(sys.getsizeof(id_total))  
-# %%            
-print(sys.getsizeof(y_total))
-# %%
-print(sys.getsizeof(pred_total))
-# %%
-print(sys.getsizeof(out_total))
-
-# %%
-print(id_total[0:10])
-# %%
-print(y_total[0:10])
-# %%
-print(pred_total[0:10])
-# %%
-print(out_total[0:10])
-# %%
-print(len(out_total))
 # %%
 output_list = []
 for i in range(5873395):
@@ -385,7 +351,7 @@ outdf = pd.DataFrame(output_list)
 # %%
 print(outdf[0:1])
 # %%
-outputfile = "./model/saint_all_label/saint_id_y_pred_51probability_test2.csv"
+outputfile = "./model/saint_all_label/saint_id_y_pred_51probability_setseed_test2.csv"
 outdf.to_csv(outputfile, sep=',', header=False, index=False)
 # %%
 print(outdf.shape)
