@@ -7,6 +7,9 @@
         "string_view": "cpp",
         "initializer_list": "cpp",
         "utility": "cpp",
-        "iosfwd": "cpp"
-    }
+        "iosfwd": "cpp",
+        "thread": "cpp",
+        "string": "cpp"
+    },
+    "cmake.sourceDirectory": "${workspaceFolder}/c++/tqdm.cpp-master"
 }

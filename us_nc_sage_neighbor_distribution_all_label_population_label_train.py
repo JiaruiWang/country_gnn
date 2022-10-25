@@ -24,12 +24,12 @@ from sklearn.metrics import classification_report
 from sklearn.utils.class_weight import compute_class_weight
 import numpy as np
 
-from us_lgc_all_label_51by6_neighbor_distribution_in_mem_dataset import USLGCDistributionFeaturesDataset
+from us_lgc_all_label_population_label_51by6_neighbor_distribution_with_id_in_mem_dataset import USLGCPopulationLabelDistributionFeaturesWithIdDataset
 EPS = 1e-15
 
 # %% 
 # Load dataset
-dataset = USLGCDistributionFeaturesDataset("./data/")
+dataset = USLGCPopulationLabelDistributionFeaturesWithIdDataset("./data/")
 # examine the graph
 print(f'Dataset: {dataset}:')
 print('======================')
@@ -369,7 +369,8 @@ def get_pred_classes_count():
 # Start training
 min_loss = float('inf')
 best_model_state = None
-for epoch in range(1, 100):
+# for epoch in range(1, 100):
+for epoch in range(1, 20):
     loss = train()
     print(f'Epoch: {epoch:03d}, Loss: {loss:.10f}')
     # train_acc, val_acc, test_acc  = test()
@@ -386,8 +387,8 @@ print('min_loss',  min_loss)
 
 # %%
 # Save the model
-PATH = './model/sage_all_label/sage_all_label_aggr_mean_normalize.pt'
-# torch.save(best_model_state, PATH)
+PATH = './model/sage_population_label_all_label/sage_population_label_all_label_20epoch.pt'
+torch.save(best_model_state, PATH)
 
 
 # %%

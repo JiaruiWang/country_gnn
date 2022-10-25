@@ -39,9 +39,9 @@ from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.ensemble import GradientBoostingClassifier
 
 # FV_PATH = "./features_adv_min2_selected800/"
-FV_PATH = '/home/jerry/Documents/public_page_graph/Adv_BFS/BFS_output_min2_selected_with_id_first800/'
+FV_PATH = '/home/jerry/Documents/jason_code/python code/state_labeler/adv/features_adv_min2_selected800/'
 # PNG_PATH = './png/'
-PNG_PATH = "/home/jerry/Documents/public_page_graph/Adv_BFS/png/"
+PNG_PATH = "/home/jerry/Documents/jason_code/python code/state_labeler/adv/png/"
 
 #FV_PER_STATE = 1000
 FV_PER_STATE = 800
@@ -62,11 +62,9 @@ s2i_table = {}  # hash table for state to index
 i2s_table = {}  # hash table for index to state
 
 # use neighbor info only for feature
-# zero_data = np.zeros(shape=(ROW_CNT, COL_CNT/2)) # 40800 * 102
+# zero_data = np.zeros(shape=(ROW_CNT, int(COL_CNT/2))) # 40800 * 102
 
 zero_data = np.zeros(shape=(ROW_CNT, COL_CNT)) # 40800 * 204
-
-# zero_data = np.zeros(shape=(ROW_CNT, 206)) # 40800 * 206
 
 data = pd.DataFrame(zero_data)
 print(data.shape)
@@ -76,8 +74,6 @@ def readStateMap(fname):
         for line in f.readlines():
             word = line.rstrip()
             state = word
-            if state == "dup_states":
-                continue
             s2i_table[state] = cnt
             i2s_table[cnt] = state
             #print("c2i_table[country]: %d, i2c_table[cnt]: %s"  \
@@ -98,118 +94,15 @@ def readFeatures(fname, row_cnt):
             
             data.iloc[row_cnt + i] = row_data.iloc[i]
 
-            # # use neighbor info only for feature
+            # use neighbor info only for feature
             # nprow = row_data.iloc[i,0:102].to_numpy()
-            # # nprow = row_data.iloc[i,102:204].to_numpy()
+            # nprow = row_data.iloc[i,102:204].to_numpy()
+            # nprow = row_data.iloc[i,0:204].to_numpy()
             # if not np.all(np.isfinite(nprow)):
             #     print(nprow)
             # data.iloc[row_cnt + i] = nprow
 
         #print(data.iloc[row_cnt:row_cnt + 2])
-
-def readFeatures_6M():
-    with open('/home/jerry/Documents/country_gnn/comparison_jason/state_classes.csv', "r") as f:
-        state_id = 0
-        row_id = 0
-        y = []
-        total = np.zeros(shape=(6163055, COL_CNT)) # col 204
-
-        # 6,163,055 + 200,000 others
-        # total = np.zeros(shape=(6163055, 206)) # col 206
-
-        raw_features = pd.DataFrame(total)
-        raw_id = pd.DataFrame(np.zeros(shape=(6163055, 1)))
-
-        # features = pd.DataFrame(np.zeros(shape=(5873395, COL_CNT)))
-        features = pd.DataFrame(np.zeros(shape=(5846712, COL_CNT)))
-        # features = pd.DataFrame(np.zeros(shape=(5846712, 206)))
-        features_id = []
-
-        
-        
-        # read all us pages feature and id
-        for line in f.readlines():
-            if (state_id == 51): break
-            word = line.rstrip()
-            state = word
-            s2i_table[state] = state_id
-            i2s_table[state_id] = state
-            #print("c2i_table[country]: %d, i2c_table[state_id]: %s"  \
-            #%(c2i_table[country], i2c_table[state_id]))
-            csv_name = '/home/jerry/Documents/public_page_graph/Adv_BFS_with_dup_states/BFS_output/' + state + ".csv"
-            id_csv_name = '/home/jerry/Documents/public_page_graph/Adv_BFS_with_dup_states/BFS_output/id_' + state + ".csv"
-            print(csv_name)
-            record = []
-            
-            
-            row_data = pd.read_csv(csv_name, header = None,on_bad_lines='skip', skip_blank_lines=True,
-                                #    dtype=np.float32,
-                                   low_memory=False,
-                                   na_values=0, 
-                                   keep_default_na=False)
-            row_data_id = pd.read_csv(id_csv_name, header = None, on_bad_lines='skip', skip_blank_lines=True,
-                                #    dtype=str,
-                                   low_memory=False,
-                                   na_values=0, 
-                                   keep_default_na=False)
-            assert row_data.shape[0]==row_data_id.shape[0]
-            print(row_data.shape, raw_features.shape)
-            if row_data.empty:
-                print("%s is empty! row_cnt == %d" %(csv_name, row_id))
-            else:
-                for i in range(row_data.shape[0]):
-                    raw_features.iloc[row_id] = row_data.iloc[i]
-                    raw_id.iloc[row_id] = row_data_id.iloc[i]
-                    # elements = row_data.iloc[i].values.tolist()
-                    # for e in elements:
-                    #     if type(e) is 'str': record.append(row_id)
-                    row_id += 1
-            state_id += 1
-            print('finish', row_id)
-        for i in range(204):
-            raw_features.iloc[:, i] = pd.to_numeric(raw_features.iloc[:,i], errors='coerce')
-        raw_features = raw_features.fillna(0)
-        raw_features.to_csv('raw_features.csv')
-        raw_id.to_csv('raw_id.csv')
-        print(raw_id[0:10])
-        
-        # read id and label
-        id_to_state = {}
-        with open('/home/jerry/Documents/country_gnn/data/raw_dir/us_pages_lgc_idx_id_mask_label_state.csv', 'r') as csvfile:
-            reader = csv.reader(csvfile, delimiter='t')
-            for r in reader:
-                elements = r[0].split('\t')
-                id, state_id = int(elements[1]), int(elements[3]) 
-                id_to_state[id] = state_id
-        
-        # look up id in the dict
-        cnt = 0
-        for i in range(raw_features.shape[0]):
-            id = raw_id.iloc[i].values.tolist()[0]
-
-            if id not in id_to_state: 
-                continue
-
-            state_id = id_to_state[id]
-            if state_id >= 47: # 47 is Washington, D.C.
-                y.append(state_id - 1)
-            else:
-                y.append(state_id)
-            features_id.append(id)
-            features.iloc[cnt] = raw_features.iloc[i]
-            cnt += 1
-        print(cnt, 'total us pages.')
-        features.to_csv('features.csv')
-
-        y = pd.DataFrame(y)
-        y.to_csv('y.csv')
-        features_id = pd.DataFrame(features_id)
-        features_id.to_csv('features_id.csv')
-        print(features.dtypes)
-        # print(features.iloc[record])
-        # features = pd.DataFrame(features)
-        print(features.shape, y.shape)
-        return features, y
 
 def genY():
     Y = [0] * ROW_CNT
@@ -266,43 +159,28 @@ def classSub(clf, X, y, random_state, cv):
 
 def classFit(clf, X_train, X_test, y_train, y_test):
     clf.fit(X_train, y_train)
-
     predicts = clf.predict(X_test)
-    print(predicts)
-    print(y_test)
     print(classification_report(y_test, predicts))
 
-    features, y = readFeatures_6M()
+    # Compute confusion matrix
+    cnf_matrix = confusion_matrix(y_test, predicts)
+    np.set_printoptions(precision=2)
 
-    features = pd.read_csv('/home/jerry/Documents/country_gnn/comparison_jason/features.csv', index_col=0)
-    y = pd.read_csv('/home/jerry/Documents/country_gnn/comparison_jason/y.csv', index_col=0, dtype=(int))
-    print(features.shape, y.shape)
-
-    
-    print("F1 score report for 6M:")
-    pred = clf.predict(features.values)
-    print(classification_report(y, pred))
-    return pred
-
-    # # Compute confusion matrix
-    # cnf_matrix = confusion_matrix(y_test, predicts)
-    # np.set_printoptions(precision=2)
-
-    # # Plot non-normalized confusion matrix
-    # plt.figure()
-    # plot_confusion_matrix(cnf_matrix, classes=class_names,
-    #                       title='Confusion matrix, without normalization')
-    # """
-    # # Plot normalized confusion matrix
-    # plt.figure()
-    # plot_confusion_matrix(cnf_matrix, classes=class_names, normalize=True,
-    #                       title='Normalized confusion matrix')
-    # """
-    # #plt.show()
-    # fname = "confusion"
-    # png_name = PNG_PATH + fname + ".png"
-    # plt.savefig(png_name, dpi=300, format='png')
-    # return predicts
+    # Plot non-normalized confusion matrix
+    plt.figure()
+    plot_confusion_matrix(cnf_matrix, classes=class_names,
+                          title='Confusion matrix, without normalization')
+    """
+    # Plot normalized confusion matrix
+    plt.figure()
+    plot_confusion_matrix(cnf_matrix, classes=class_names, normalize=True,
+                          title='Normalized confusion matrix')
+    """
+    #plt.show()
+    fname = "confusion"
+    png_name = PNG_PATH + fname + ".png"
+    plt.savefig(png_name, dpi=300, format='png')
+    return predicts
 
 def classifier(clf, X, y, random_state, cv):
     X_train, X_test, y_train, y_test = classSub(clf, X, y, random_state, cv)
@@ -357,21 +235,19 @@ def dataFit():
     #clf5 = GradientBoostingClassifier()     # could be fine-tuned
 
     
-    # print("classifier: GaussianNB()")
-    # classifier(clf1, data2, y, random_state, 5)
-    # print("classifier: AdaBoostClassifier()")
-    # classifier(clf2, data2, y, random_state, 5)
-    # print("classifier: DecisionTreeClassifier()")
-    # classifier(clf3, data2, y, random_state, 5)
+    print("classifier: GaussianNB()")
+    classifier(clf1, data2, y, random_state, 5)
+    print("classifier: AdaBoostClassifier()")
+    classifier(clf2, data2, y, random_state, 5)
+    print("classifier: DecisionTreeClassifier()")
+    classifier(clf3, data2, y, random_state, 5)
     
     print("classifier: RandomForestClassifier()")
     classifier(clf4, data2, y, random_state, 5)
     #print("classifier: GradientBoostingClassifier()")
     #classifier(clf5, data2, y, random_state, 5)
 
-readStateMap('/home/jerry/Documents/country_gnn/comparison_jason/state_classes.csv')
-
-
+readStateMap('/home/jerry/Documents/jason_code/python code/state_labeler/adv/state_classes.csv')
 dataFit()
 
 # %%
