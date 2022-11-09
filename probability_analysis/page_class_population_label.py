@@ -205,7 +205,7 @@ pages_dict = {}
 
 cities_notfound = []
 cities_found = []
-inputfile = '../model/saint_all_label/idx_id_mask_label_state_pred_state_threshold_counts_possible_states.csv'
+inputfile = '../model/saint_population_label_all_label/id_label_state_pred_state_threshold_counts_possible_states.csv'
 full_info = '/home/jerry/Documents/country_gnn/model/saint_all_label/us_lgc_page_id_name_category_city_likespage_fan_outward_inward.csv'
 
 with open(inputfile, 'r') as file, open(full_info, 'r') as fullinfo:
@@ -223,24 +223,24 @@ with open(inputfile, 'r') as file, open(full_info, 'r') as fullinfo:
         outward = int(info[6])
         inward = int(info[7])
 
-        idx = int(row[0])
-        id = int(row[1])
+        idx = 0
+        id = int(row[0])
 
         if (id != info_id):
             print(id)
             break
-        mask = int(row[2])
-        label = int(row[3])
-        label_state = str(row[4])
-        pred = int(row[5])
-        pred_state = str(row[6])
-        threshold = float(row[7])
-        counts = int(row[8])
+        mask = 0
+        label = int(row[1])
+        label_state = str(row[2])
+        pred = int(row[3])
+        pred_state = str(row[4])
+        threshold = float(row[5])
+        counts = int(row[6])
         states = []
         probs = []
         for i in range(counts):
-            states.append(row[9+i*2])
-            probs.append(float(row[9+i*2+1]))
+            states.append(row[7+i*2])
+            probs.append(float(row[7+i*2+1]))
 
         key = (city, label_state)
         
@@ -266,39 +266,44 @@ sorted_pages = sorted(pages, reverse=True)
 print(sorted_pages[0:100])
 #%%
 # Get count for pages with different number of possible states.
-# 1 5111697
-# 2 499577
-# 3 155095
-# 4 64826
-# 5 26434
-# 6 9811
-# 7 3502
-# 8 1421
-# 9 565
-# 10 263
-# 11 101
-# 12 55
-# 13 29
-# 14 9
-# 15 4
-# 16 2
-# 17 2
-# 18 2
+# 1 4933139
+# 2 643292
+# 3 162838
+# 4 64190
+# 5 30335
+# 6 16073
+# 7 9241
+# 8 5477
+# 9 3328
+# 10 2108
+# 11 1356
+# 12 853
+# 13 455
+# 14 288
+# 15 172
+# 16 104
+# 17 68
+# 18 42
+# 19 16
+# 20 11
+# 21 6
+# 22 2
+# 23 1
 possible_counts_pages = {}
-for i in range(18):
+for i in range(23):
     possible_counts_pages[i+1] = []
 
 for page in sorted_pages:
     possible_counts_pages[page.possible_counts].append(page)
 
 # Inter state scale?? Globalness scale?
-for k in range(18):
+for k in range(23):
     print(k+1, len(possible_counts_pages[k+1]))
 
 #%%
 # build maps for states tuple key
 states_tuple_key= {}
-for i in range(2, 19):
+for i in range(2, 24):
     # tuple key for each key length
     states_tuple_key[i] = {}
     for j in range(len(possible_counts_pages[i])):
@@ -311,15 +316,37 @@ for i in range(2, 19):
                                  possible_counts_pages[i][j].tuple_key_no_centers)].append(possible_counts_pages[i][j])
 #%%
 # print unique key numbers for each key length in states tuple key
-for k in range(2, 19):
+# 2 1270
+# 3 11196
+# 4 20634
+# 5 18460
+# 6 12745
+# 7 8337
+# 8 5224
+# 9 3245
+# 10 2080
+# 11 1342
+# 12 846
+# 13 454
+# 14 287
+# 15 172
+# 16 104
+# 17 68
+# 18 42
+# 19 16
+# 20 11
+# 21 6
+# 22 2
+# 23 1
+for k in range(2, 24):
     print(k, len(states_tuple_key[k]))
 
 #%% 
 # inspect tuple key map
-outputfile = '../model/saint_all_label/tuple_keys_contains_pages_most_neighbors_labeling_fan_order.csv'
+outputfile = '../model/saint_population_label_all_label/tuple_keys_contains_pages_population_labeling_fan_order.csv'
 with open(outputfile, 'w') as file:
     csvwriter = csv.writer(file, delimiter='\t')
-    for i in range(2, 19):
+    for i in range(2, 24):
         # row = [i]
         key_list = list(states_tuple_key[i].keys())
         key_list.sort()

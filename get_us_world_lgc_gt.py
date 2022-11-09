@@ -128,26 +128,27 @@ print(labels.get_array().sum())
 # 60890130
 # %%
 # Update largest component indice to mysql table edges column largest_component.
-mydb = mysql.connector.connect(
-  host="localhost",
-  user="jerry",
-  password="password",
-  database="pagenet"
-)
-mycursor = mydb.cursor()
 
-count = 0
+# mydb = mysql.connector.connect(
+#   host="localhost",
+#   user="jerry",
+#   password="password",
+#   database="pagenet"
+# )
+# mycursor = mydb.cursor()
 
-for i in labels.a:
-    # world 60924683
-    sql = "update pages set gt_lg_cmpt={} where idx={}".format(i, count)
-    mycursor.execute(sql)
-    count += 1
-    if count % 100000 == 0:
-        mydb.commit()
-        print(count, "record updated.")
-mydb.commit()
-print(count, "record updated.")
+# count = 0
+
+# for i in labels.a:
+#     # world 60924683
+#     sql = "update pages set gt_lg_cmpt={} where idx={}".format(i, count)
+#     mycursor.execute(sql)
+#     count += 1
+#     if count % 100000 == 0:
+#         mydb.commit()
+#         print(count, "record updated.")
+# mydb.commit()
+# print(count, "record updated.")
 
 # %%
 # Load US graph
@@ -199,23 +200,24 @@ print(lgc_nodes_us)
 
 # %%
 # Update largest component indice to mysql table us_edges column gt_lgc.
-mydb = mysql.connector.connect(
-  host="localhost",
-  user="jerry",
-  password="password",
-  database="pagenet"
-)
-mycursor = mydb.cursor()
-sql_prefix = "update us_pages set gt_lgc=True where idx="
-count = 0
-for i in lgc_nodes_us:
-    # if count > 60890100: print(i)
-    sql = sql_prefix + str(i) + ";"
-    mycursor.execute(sql)
-    count += 1
-    if count % 100000 == 0:
-        mydb.commit()
-        print(count, "record updated.")
-mydb.commit()
-print(count, "record updated.")
+
+# mydb = mysql.connector.connect(
+#   host="localhost",
+#   user="jerry",
+#   password="password",
+#   database="pagenet"
+# )
+# mycursor = mydb.cursor()
+# sql_prefix = "update us_pages set gt_lgc=True where idx="
+# count = 0
+# for i in lgc_nodes_us:
+#     # if count > 60890100: print(i)
+#     sql = sql_prefix + str(i) + ";"
+#     mycursor.execute(sql)
+#     count += 1
+#     if count % 100000 == 0:
+#         mydb.commit()
+#         print(count, "record updated.")
+# mydb.commit()
+# print(count, "record updated.")
 # %%

@@ -3,7 +3,7 @@ import pandas as pd
 import os.path as osp
 import numpy as np
 
-
+# most-neighbors labeling
 # %%
 file_path1 = '../data/raw_dir/us_pages_lgc_true_label_51_label.csv'
 twolabel = pd.read_csv(file_path1, sep='\t', header=None)
