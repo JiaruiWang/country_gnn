@@ -444,7 +444,7 @@ print(list(idx_label.values())[0:100])
 # %%
 # first round: print the result label to us_lgc_2_hop_bfs_voting_label.csv for the first round
 first_round_label_result = []
-with open('./new_cities_2hop_bfs_1_round_id_idx_city_dupStates_trueLabel_mostPopulationLabel_1stRoundDupstate0.csv', 'w') as csvfile:
+with open('./new_cities_2hop_bfs_1_round_pl_id_idx_city_dupStates_trueLabel_mostPopulationLabel_1stRoundDupstate0.csv', 'w') as csvfile:
     writer = csv.writer(csvfile)
     for i in range(len(shared_labels)):
         first_round_label_result.append(shared_labels[i])
@@ -542,7 +542,7 @@ print(list(idx_label.values())[0:100])
 
 # %%
 # print the result label to us_lgc_2_hop_bfs_voting_label.csv
-with open('./new_cities_2hop_bfs_2_round_id_idx_city_dupStates_trueLabel_mostPopulationLabel_2ndRoundDupstate0_1stRoundDupstate0.csv', 'w') as csvfile:
+with open('./new_cities_2hop_bfs_2_round_pl_id_idx_city_dupStates_trueLabel_mostPopulationLabel_2ndRoundDupstate0_1stRoundDupstate0.csv', 'w') as csvfile:
     writer = csv.writer(csvfile)
     for i in range(len(shared_labels)):
         node_info = lgc_nodes_info[i]

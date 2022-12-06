@@ -242,23 +242,39 @@ with open(inputfile, 'r') as file, open(full_info, 'r') as fullinfo:
             states.append(row[7+i*2])
             probs.append(float(row[7+i*2+1]))
 
+        page = Page(idx, id, city, name, category, likespage,
+                 fan, outward, inward, mask, label, label_state, pred, pred_state, threshold, counts, states, probs)
+
         key = (city, label_state)
         
         if key in cities:
             cities_found.append(key)
+            page.city = cities[key][city_headers['city']]
+            page.city_population = cities[key][city_headers['population']]
+            page.city_density = cities[key][city_headers['density']]
+            page.county =  cities[key][city_headers['county_name']]
+            page.county_fips = cities[key][city_headers['county_fips']]
         else:
             cities_notfound.append(key)
 
-        page = Page(idx, id, city, name, category, likespage,
-                 fan, outward, inward, mask, label, label_state, pred, pred_state, threshold, counts, states, probs)
         pages.append(page)
         pages_dict[id] = page
 
 print(len(cities_found), len(cities_notfound))
 
 #%%
-# print(cities_notfound[0:100])
-print(pages[0:100])
+print(cities_notfound[0:100])
+# print(pages[0:100])
+
+#%%
+outputfile = './id_city_cityPopulation_county_countyFips.csv'
+with open(outputfile, 'w') as file:
+    csvwriter = csv.writer(file, delimiter='\t')
+    for i in range(len(pages)):
+        row = [pages[i].id, pages[i].city, pages[i].city_population,
+               pages[i].county, pages[i].county_fips]
+        csvwriter.writerow(row)
+
 # %%
 sorted_pages = sorted(pages, reverse=True)
 #%%

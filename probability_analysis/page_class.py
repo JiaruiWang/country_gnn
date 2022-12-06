@@ -242,15 +242,22 @@ with open(inputfile, 'r') as file, open(full_info, 'r') as fullinfo:
             states.append(row[9+i*2])
             probs.append(float(row[9+i*2+1]))
 
+        page = Page(idx, id, city, name, category, likespage,
+                 fan, outward, inward, mask, label, label_state, pred, pred_state, threshold, counts, states, probs)
+
         key = (city, label_state)
         
         if key in cities:
             cities_found.append(key)
+            page.city = cities[key][city_headers['city']]
+            page.city_population = cities[key][city_headers['population']]
+            page.city_density = cities[key][city_headers['density']]
+            page.county =  cities[key][city_headers['county_name']]
+            page.county_fips = cities[key][city_headers['county_fips']]
         else:
             cities_notfound.append(key)
 
-        page = Page(idx, id, city, name, category, likespage,
-                 fan, outward, inward, mask, label, label_state, pred, pred_state, threshold, counts, states, probs)
+
         pages.append(page)
         pages_dict[id] = page
 
@@ -311,6 +318,25 @@ for i in range(2, 19):
                                  possible_counts_pages[i][j].tuple_key_no_centers)].append(possible_counts_pages[i][j])
 #%%
 # print unique key numbers for each key length in states tuple key
+
+# 2 1197
+# 3 5242
+# 4 7502
+# 5 6778
+# 6 4623
+# 7 2542
+# 8 1231
+# 9 544
+# 10 260
+# 11 101
+# 12 55
+# 13 29
+# 14 9
+# 15 4
+# 16 2
+# 17 2
+# 18 2
+
 for k in range(2, 19):
     print(k, len(states_tuple_key[k]))
 

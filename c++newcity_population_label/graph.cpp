@@ -264,7 +264,7 @@ void Graph::write(string directory) {
 	cout << "-----------------start writing-------------------" << endl;
 
 	ofstream ofs;
-	string file = directory + "new_cities_population_label_51_by_6_neighbor_distribution.csv";
+	string file = directory + "new_cities_pl_label_51_by_6_neighbor_distribution.csv";
 
 
 	ofs.open(file);

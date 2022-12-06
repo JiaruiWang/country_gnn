@@ -207,7 +207,7 @@ model = model.to(device)
 weight = weight.to(device)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01  ,  weight_decay=5e-4)
-criterion = torch.nn.CrossEntropyLoss(reduction='mean', weight=weight)
+criterion = torch.nn.CrossEntropyLoss(reduction='mean')
 # criterion = F.nll_loss()
 # https://stackoverflow.com/questions/65192475/pytorch-logsoftmax-vs-softmax-for-crossentropyloss
 

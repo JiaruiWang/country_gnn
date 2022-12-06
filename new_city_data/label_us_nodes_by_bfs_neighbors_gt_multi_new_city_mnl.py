@@ -82,7 +82,7 @@ import csv
 is_header = True
 city_headers = {}
 cities = {}
-cityfilename = './us-cities-30k-noDC-noPR.csv'
+cityfilename = './us-cities-30k-noPR.csv'
 with open(cityfilename, 'r') as cityfile:
     cityreader = csv.reader(cityfile)
     for row in cityreader:
@@ -138,7 +138,7 @@ lgc_nodes_info = []
 idx_label = {}
 idx_city = {}
 idx_index = {}
-
+count_true_label = 0
 with open('../data/raw_dir/us_pages_lgc.csv', 'r') as csvfile:
     reader = csv.reader(csvfile, delimiter='\t')
     count = 0
@@ -152,7 +152,8 @@ with open('../data/raw_dir/us_pages_lgc.csv', 'r') as csvfile:
             new_dup_states = len(cities_dup_states[city])
             if new_dup_states == 1:
                 new_label = list(cities_dup_states[city].keys())[0]
-
+        if new_label != -1:
+            count_true_label += 1
         row = {'id':id, 'idx':idx, 'label':new_label, 'city':city, 'dup_states':new_dup_states}
         lgc_nodes_info.append(row)
         idx_label[idx] = new_label
@@ -161,6 +162,10 @@ with open('../data/raw_dir/us_pages_lgc.csv', 'r') as csvfile:
         count += 1
         # if count == 10: break
 print(len(lgc_nodes_info))
+print(count_true_label)
+# 5873395
+# 2114133
+# 2114133 + 33266(washington) = 2147399
 #%%
 print(lgc_nodes_info[0:10])
 
@@ -383,7 +388,7 @@ print(list(idx_label.values())[0:40])
 # %%
 # first round: print the result label to us_lgc_2_hop_bfs_voting_label.csv for the first round
 first_round_label_result = []
-with open('./new_cities_2hop_bfs_1_round_id_idx_city_dupStates_trueLabel_1stRoundLabel.csv', 'w') as csvfile:
+with open('./new_cities_2hop_bfs_1_round_mnl_id_idx_city_dupStates_trueLabel_1stRoundLabel.csv', 'w') as csvfile:
     writer = csv.writer(csvfile)
     for i in range(len(shared_labels)):
         first_round_label_result.append(shared_labels[i])
@@ -480,7 +485,7 @@ print(list(idx_label.values())[0:40])
 
 # %%
 # print the result label to us_lgc_2_hop_bfs_voting_label.csv
-with open('./new_cities_2hop_bfs_2_round_id_idx_city_dupStates_trueLabel_2ndRoundLabel_1stRoundLabel.csv', 'w') as csvfile:
+with open('./new_cities_2hop_bfs_2_round_mnl_id_idx_city_dupStates_trueLabel_2ndRoundLabel_1stRoundLabel.csv', 'w') as csvfile:
     writer = csv.writer(csvfile)
     for i in range(len(shared_labels)):
         node_info = lgc_nodes_info[i]

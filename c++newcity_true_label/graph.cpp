@@ -22,6 +22,7 @@ void Graph::parse_page (ifstream& is) {
 	unsigned long pageID = 0;
 	int new_idx = 0, state_idx = 0, cnt = 0, trueLabel = 0, dupStates = 0,
 		mostPopulationLabel = 0, firstRoundDupstate0 = 0;
+	int count_washington = 0, count_5200_washington = 0, count_true_label = 0;
 	bool mask;
 	string city, line;
 	string pageID_str, new_idx_str, dupStates_str, trueLabel_str,
@@ -53,8 +54,15 @@ void Graph::parse_page (ifstream& is) {
 		firstRoundDupstate0 = stoi(firstRoundDupstate0_str);
 		
 		// use true label as state index, not the 2nd round population labels.
-		state_idx = trueLabel;
 		
+		if(city == "washington") {
+			if (trueLabel == -1) {
+				count_5200_washington++;
+			}
+			trueLabel = 50;
+			count_washington++;
+		}
+		state_idx = trueLabel;
 		// getline(is, state, '\n'); // is >> state will only read "New" from "New York".
 		
 		// cout << pageID << " " << new_idx << " " << city << " " << dupStates << " " << trueLabel << " "
@@ -65,6 +73,9 @@ void Graph::parse_page (ifstream& is) {
 
 		cnt++;
 		mask = (trueLabel != -1);
+		if (mask == true) {
+			count_true_label++;
+		}
 		Page * current = new Page(new_idx, pageID, mask, state_idx
 								//   , state
 								  );
@@ -96,6 +107,9 @@ void Graph::parse_page (ifstream& is) {
 	
 	cout << "Done. "<< cnt << " pageIDs processed. " << endl;
 	cout << "pageMap size " << pageMap.size() << endl;
+	cout << "count_5200_washington " << count_5200_washington << endl;
+	cout << "count_washington " << count_washington << endl;
+	cout << "count_true_label " << count_true_label << endl;
 	cout << "-----------------------------------------------" << endl;
 }
 
@@ -268,7 +282,7 @@ void Graph::write(string directory) {
 	cout << "-----------------start writing-------------------" << endl;
 
 	ofstream ofs;
-	string file = directory + "new_cities_true_label_50_by_6_neighbor_distribution.csv";
+	string file = directory + "new_cities_true_label_more_washington_51_by_6_neighbor_distribution.csv";
 
 
 	ofs.open(file);

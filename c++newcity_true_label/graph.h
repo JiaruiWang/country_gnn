@@ -6,7 +6,7 @@
 #include <unordered_set>
 #include <assert.h>
 
-#define NUM_OF_STATES 50 // for true label only
+#define NUM_OF_STATES 51 // for true label only 
 
 using namespace std;
 

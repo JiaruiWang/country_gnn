@@ -1,0 +1,513 @@
+
+2 dummy
+T.RandomLinkSplit(num_val=0.001, num_test=0.001, is_undirected=False,
+                #   disjoint_train_ratio=0.3,
+                    add_negative_train_samples=False, neg_sampling_ratio=2),
+Epoch: 001, Loss: 3586.7631
+Epoch: 002, Loss: 167.0011
+Epoch: 003, Loss: 20.8416
+Epoch: 004, Loss: 16.5852
+Epoch: 005, Loss: 13.5398
+Epoch: 006, Loss: 9.4012
+Epoch: 007, Loss: 6.2273
+Epoch: 008, Loss: 5.2293
+Epoch: 009, Loss: 3.9357
+Epoch: 010, Loss: 3.0203
+100%|██████████| 62/62 [03:50<00:00,  3.72s/it]
+100%|██████████| 62/62 [03:51<00:00,  3.73s/it]
+Epoch: 010, Loss: 3.0203, Val: 0.1522, Test: 0.1538
+Epoch: 010, Loss: 3.0203, Val: 0.1522, Test: 0.1538
+
+Epoch: 011, Loss: 2.4646
+Epoch: 012, Loss: 2.0355
+Epoch: 013, Loss: 1.7226
+Epoch: 014, Loss: 1.4422
+Epoch: 015, Loss: 1.2957
+Epoch: 016, Loss: 1.1861
+Epoch: 017, Loss: 1.1075
+Epoch: 018, Loss: 1.0424
+Epoch: 019, Loss: 1.0434
+Epoch: 020, Loss: 0.9560
+100%|██████████| 62/62 [03:31<00:00,  3.42s/it]
+100%|██████████| 62/62 [03:31<00:00,  3.40s/it]
+Epoch: 020, Loss: 0.9560, Val: 0.4961, Test: 0.4972
+Epoch: 020, Loss: 0.9560, Val: 0.4961, Test: 0.4972
+
+Epoch: 021, Loss: 0.9120
+Epoch: 022, Loss: 0.9146
+Epoch: 023, Loss: 0.8637
+Epoch: 024, Loss: 0.8414
+Epoch: 025, Loss: 0.8217
+Epoch: 026, Loss: 0.7924
+Epoch: 027, Loss: 0.7852
+Epoch: 028, Loss: 0.7759
+Epoch: 029, Loss: 0.7456
+Epoch: 030, Loss: 0.7381
+100%|██████████| 62/62 [03:17<00:00,  3.18s/it]
+100%|██████████| 62/62 [03:14<00:00,  3.13s/it]
+Epoch: 030, Loss: 0.7381, Val: 0.6103, Test: 0.6114
+Epoch: 030, Loss: 0.7381, Val: 0.6103, Test: 0.6114
+
+Epoch: 031, Loss: 0.7088
+Epoch: 032, Loss: 0.6959
+Epoch: 033, Loss: 0.7584
+Epoch: 034, Loss: 0.6847
+Epoch: 035, Loss: 0.6631
+Epoch: 036, Loss: 0.6559
+Epoch: 037, Loss: 0.6329
+Epoch: 038, Loss: 0.6309
+Epoch: 039, Loss: 0.6119
+Epoch: 040, Loss: 0.6144
+100%|██████████| 62/62 [03:14<00:00,  3.13s/it]
+100%|██████████| 62/62 [03:09<00:00,  3.06s/it]
+Epoch: 040, Loss: 0.6144, Val: 0.6804, Test: 0.6814
+Epoch: 040, Loss: 0.6144, Val: 0.6804, Test: 0.6814
+
+Epoch: 041, Loss: 0.5935
+Epoch: 042, Loss: 0.5995
+Epoch: 043, Loss: 0.5935
+Epoch: 044, Loss: 0.5981
+Epoch: 045, Loss: 0.6255
+Epoch: 046, Loss: 0.7727
+Epoch: 047, Loss: 1.0382
+Epoch: 048, Loss: 1.8326
+Epoch: 049, Loss: 3.0157
+Epoch: 050, Loss: 1.5322
+100%|██████████| 62/62 [03:14<00:00,  3.14s/it]
+100%|██████████| 62/62 [03:15<00:00,  3.15s/it]
+Epoch: 050, Loss: 1.5322, Val: 0.3511, Test: 0.3529
+
+
+Epoch: 001, Loss: 2390.7958
+Epoch: 002, Loss: 102.7382
+Epoch: 003, Loss: 13.0658
+Epoch: 004, Loss: 7.5074
+Epoch: 005, Loss: 5.4898
+Epoch: 006, Loss: 4.8129
+Epoch: 007, Loss: 3.5481
+Epoch: 008, Loss: 2.9367
+Epoch: 009, Loss: 2.2868
+Epoch: 010, Loss: 1.9411
+100%|██████████| 62/62 [03:33<00:00,  3.45s/it]
+100%|██████████| 62/62 [03:29<00:00,  3.38s/it]
+Epoch: 010, Loss: 1.9411, Val: 0.1870, Test: 0.1852
+Epoch: 010, Loss: 1.9411, Val: 0.1870, Test: 0.1852
+
+Epoch: 011, Loss: 1.7682
+Epoch: 012, Loss: 2.0335
+Epoch: 013, Loss: 2.0320
+Epoch: 014, Loss: 2.6498
+Epoch: 015, Loss: 1.9997
+Epoch: 016, Loss: 1.7741
+Epoch: 017, Loss: 1.3937
+Epoch: 018, Loss: 1.2309
+Epoch: 019, Loss: 1.1187
+Epoch: 020, Loss: 1.0478
+100%|██████████| 62/62 [03:56<00:00,  3.81s/it]
+100%|██████████| 62/62 [03:49<00:00,  3.69s/it]
+Epoch: 020, Loss: 1.0478, Val: 0.3061, Test: 0.3053
+Epoch: 020, Loss: 1.0478, Val: 0.3061, Test: 0.3053
+
+Epoch: 021, Loss: 0.9767
+Epoch: 022, Loss: 0.9279
+Epoch: 023, Loss: 0.8920
+Epoch: 024, Loss: 0.8573
+Epoch: 025, Loss: 0.8283
+Epoch: 026, Loss: 0.8046
+Epoch: 027, Loss: 0.8195
+Epoch: 028, Loss: 0.7850
+Epoch: 029, Loss: 0.7677
+Epoch: 030, Loss: 0.7346
+100%|██████████| 62/62 [03:29<00:00,  3.38s/it]
+100%|██████████| 62/62 [03:21<00:00,  3.25s/it]
+Epoch: 030, Loss: 0.7346, Val: 0.6089, Test: 0.6094
+Epoch: 030, Loss: 0.7346, Val: 0.6089, Test: 0.6094
+
+Epoch: 031, Loss: 0.7181
+Epoch: 032, Loss: 0.6982
+Epoch: 033, Loss: 0.6743
+Epoch: 034, Loss: 0.6534
+Epoch: 035, Loss: 0.6419
+Epoch: 036, Loss: 0.6279
+Epoch: 037, Loss: 0.6166
+Epoch: 038, Loss: 0.6147
+Epoch: 039, Loss: 0.5997
+Epoch: 040, Loss: 0.5806
+100%|██████████| 62/62 [03:19<00:00,  3.23s/it]
+100%|██████████| 62/62 [03:17<00:00,  3.19s/it]
+Epoch: 040, Loss: 0.5806, Val: 0.7127, Test: 0.7135
+Epoch: 040, Loss: 0.5806, Val: 0.7127, Test: 0.7135
+
+Epoch: 041, Loss: 0.5705
+Epoch: 042, Loss: 0.5587
+Epoch: 043, Loss: 0.5584
+Epoch: 044, Loss: 0.5436
+Epoch: 045, Loss: 0.5331
+Epoch: 046, Loss: 0.5274
+Epoch: 047, Loss: 0.5191
+Epoch: 048, Loss: 0.5115
+Epoch: 049, Loss: 0.5115
+Epoch: 050, Loss: 0.4971
+100%|██████████| 62/62 [03:13<00:00,  3.12s/it]
+100%|██████████| 62/62 [03:13<00:00,  3.13s/it]
+Epoch: 050, Loss: 0.4971, Val: 0.7469, Test: 0.7471
+Epoch: 050, Loss: 0.4971, Val: 0.7469, Test: 0.7471
+
+Epoch: 051, Loss: 0.4925
+Epoch: 052, Loss: 0.4860
+Epoch: 053, Loss: 0.4853
+Epoch: 054, Loss: 0.4746
+Epoch: 055, Loss: 0.4720
+Epoch: 056, Loss: 0.4666
+Epoch: 057, Loss: 0.4598
+Epoch: 058, Loss: 0.4585
+Epoch: 059, Loss: 0.4523
+Epoch: 060, Loss: 0.4497
+100%|██████████| 62/62 [03:12<00:00,  3.10s/it]
+100%|██████████| 62/62 [03:14<00:00,  3.14s/it]
+Epoch: 060, Loss: 0.4497, Val: 0.7620, Test: 0.7618
+Epoch: 060, Loss: 0.4497, Val: 0.7620, Test: 0.7618
+
+Epoch: 061, Loss: 0.4453
+Epoch: 062, Loss: 0.4383
+Epoch: 063, Loss: 0.4380
+Epoch: 064, Loss: 0.4340
+Epoch: 065, Loss: 0.4309
+Epoch: 066, Loss: 0.4249
+Epoch: 067, Loss: 0.4224
+Epoch: 068, Loss: 0.4247
+Epoch: 069, Loss: 0.4252
+Epoch: 070, Loss: 0.4247
+100%|██████████| 62/62 [03:13<00:00,  3.11s/it]
+100%|██████████| 62/62 [03:11<00:00,  3.08s/it]
+Epoch: 070, Loss: 0.4247, Val: 0.7666, Test: 0.7663
+Epoch: 070, Loss: 0.4247, Val: 0.7666, Test: 0.7663
+
+Epoch: 071, Loss: 0.4117
+Epoch: 072, Loss: 0.4395
+Epoch: 073, Loss: 0.4766
+Epoch: 074, Loss: 0.9574
+Epoch: 075, Loss: 1.0036
+Epoch: 076, Loss: 1.0680
+Epoch: 077, Loss: 1.0439
+Epoch: 078, Loss: 0.8400
+Epoch: 079, Loss: 0.7312
+Epoch: 080, Loss: 0.6973
+100%|██████████| 62/62 [03:11<00:00,  3.09s/it]
+100%|██████████| 62/62 [03:09<00:00,  3.06s/it]
+Epoch: 080, Loss: 0.6973, Val: 0.6783, Test: 0.6799
+
+Epoch: 081, Loss: 0.7975
+Epoch: 082, Loss: 0.8371
+Epoch: 083, Loss: 0.7094
+Epoch: 084, Loss: 0.6322
+Epoch: 085, Loss: 0.9394
+Epoch: 086, Loss: 0.7678
+Epoch: 087, Loss: 0.6042
+Epoch: 088, Loss: 0.4890
+Epoch: 089, Loss: 0.4476
+Epoch: 090, Loss: 0.4120
+100%|██████████| 62/62 [03:10<00:00,  3.08s/it]
+100%|██████████| 62/62 [03:13<00:00,  3.12s/it]
+Epoch: 090, Loss: 0.4120, Val: 0.7819, Test: 0.7812
+Epoch: 090, Loss: 0.4120, Val: 0.7819, Test: 0.7812
+
+Epoch: 091, Loss: 0.4038
+Epoch: 092, Loss: 0.4012
+Epoch: 093, Loss: 0.3925
+Epoch: 094, Loss: 0.3978
+Epoch: 095, Loss: 0.3864
+Epoch: 096, Loss: 0.3864
+Epoch: 097, Loss: 0.3820
+Epoch: 098, Loss: 0.3820
+Epoch: 099, Loss: 0.3782
+Epoch: 100, Loss: 0.3763
+100%|██████████| 62/62 [03:12<00:00,  3.11s/it]
+100%|██████████| 62/62 [03:09<00:00,  3.05s/it]
+Epoch: 100, Loss: 0.3763, Val: 0.7864, Test: 0.7855
+Epoch: 100, Loss: 0.3763, Val: 0.7864, Test: 0.7855
+
+Epoch: 101, Loss: 0.3754
+Epoch: 102, Loss: 0.3748
+Epoch: 103, Loss: 0.3743
+Epoch: 104, Loss: 0.3719
+Epoch: 105, Loss: 0.3702
+Epoch: 106, Loss: 0.3714
+Epoch: 107, Loss: 0.3693
+Epoch: 108, Loss: 0.3670
+Epoch: 109, Loss: 0.3663
+Epoch: 110, Loss: 0.3652
+100%|██████████| 62/62 [03:08<00:00,  3.05s/it]
+100%|██████████| 62/62 [03:09<00:00,  3.06s/it]
+Epoch: 110, Loss: 0.3652, Val: 0.7872, Test: 0.7863
+Epoch: 110, Loss: 0.3652, Val: 0.7872, Test: 0.7863
+
+Epoch: 111, Loss: 0.3643
+Epoch: 112, Loss: 0.3631
+Epoch: 113, Loss: 0.3644
+Epoch: 114, Loss: 0.3609
+Epoch: 115, Loss: 0.3604
+Epoch: 116, Loss: 0.3596
+Epoch: 117, Loss: 0.3600
+Epoch: 118, Loss: 0.3582
+Epoch: 119, Loss: 0.3581
+Epoch: 120, Loss: 0.3599
+100%|██████████| 62/62 [03:15<00:00,  3.15s/it]
+100%|██████████| 62/62 [03:09<00:00,  3.06s/it]
+Epoch: 120, Loss: 0.3599, Val: 0.7923, Test: 0.7915
+Epoch: 120, Loss: 0.3599, Val: 0.7923, Test: 0.7915
+
+Epoch: 121, Loss: 0.3561
+Epoch: 122, Loss: 0.3557
+Epoch: 123, Loss: 0.3536
+Epoch: 124, Loss: 0.3537
+Epoch: 125, Loss: 0.3545
+Epoch: 126, Loss: 0.3531
+Epoch: 127, Loss: 0.3527
+Epoch: 128, Loss: 0.3533
+Epoch: 129, Loss: 0.3510
+Epoch: 130, Loss: 0.3540
+100%|██████████| 62/62 [03:11<00:00,  3.09s/it]
+100%|██████████| 62/62 [03:09<00:00,  3.06s/it]
+Epoch: 130, Loss: 0.3540, Val: 0.7941, Test: 0.7932
+Epoch: 130, Loss: 0.3540, Val: 0.7941, Test: 0.7932
+
+Epoch: 131, Loss: 0.3509
+Epoch: 132, Loss: 0.3491
+Epoch: 133, Loss: 0.3485
+Epoch: 134, Loss: 0.3558
+Epoch: 135, Loss: 0.3625
+Epoch: 136, Loss: 0.4527
+Epoch: 137, Loss: 0.3707
+Epoch: 138, Loss: 0.5498
+Epoch: 139, Loss: 0.6206
+Epoch: 140, Loss: 0.8655
+100%|██████████| 62/62 [03:12<00:00,  3.10s/it]
+100%|██████████| 62/62 [03:11<00:00,  3.08s/it]
+Epoch: 140, Loss: 0.8655, Val: 0.8867, Test: 0.8865
+Epoch: 140, Loss: 0.8655, Val: 0.8867, Test: 0.8865
+
+Epoch: 141, Loss: 0.7758
+Epoch: 142, Loss: 0.6909
+Epoch: 143, Loss: 0.6923
+Epoch: 144, Loss: 0.6726
+Epoch: 145, Loss: 0.6556
+Epoch: 146, Loss: 0.6281
+Epoch: 147, Loss: 0.4832
+Epoch: 148, Loss: 0.4425
+Epoch: 149, Loss: 0.4803
+Epoch: 150, Loss: 0.4717
+100%|██████████| 62/62 [03:11<00:00,  3.10s/it]
+100%|██████████| 62/62 [03:12<00:00,  3.10s/it]
+Epoch: 150, Loss: 0.4717, Val: 0.7353, Test: 0.7355
+
+Epoch: 151, Loss: 0.4158
+Epoch: 152, Loss: 0.3852
+Epoch: 153, Loss: 0.3659
+Epoch: 154, Loss: 0.3585
+Epoch: 155, Loss: 0.3606
+Epoch: 156, Loss: 0.3520
+Epoch: 157, Loss: 0.3504
+Epoch: 158, Loss: 0.3474
+Epoch: 159, Loss: 0.3472
+Epoch: 160, Loss: 0.3459
+100%|██████████| 62/62 [03:13<00:00,  3.13s/it]
+100%|██████████| 62/62 [03:09<00:00,  3.05s/it]
+Epoch: 160, Loss: 0.3459, Val: 0.7992, Test: 0.7983
+
+Epoch: 161, Loss: 0.3445
+Epoch: 162, Loss: 0.3439
+Epoch: 163, Loss: 0.3430
+Epoch: 164, Loss: 0.3424
+Epoch: 165, Loss: 0.3417
+Epoch: 166, Loss: 0.3407
+Epoch: 167, Loss: 0.3408
+Epoch: 168, Loss: 0.3445
+Epoch: 169, Loss: 0.3391
+Epoch: 170, Loss: 0.3388
+100%|██████████| 62/62 [03:19<00:00,  3.22s/it]
+100%|██████████| 62/62 [03:33<00:00,  3.44s/it]
+Epoch: 170, Loss: 0.3388, Val: 0.8026, Test: 0.8016
+
+Epoch: 171, Loss: 0.3433
+Epoch: 172, Loss: 0.3384
+Epoch: 173, Loss: 0.3378
+Epoch: 174, Loss: 0.3383
+Epoch: 175, Loss: 0.3478
+Epoch: 176, Loss: 0.3370
+Epoch: 177, Loss: 0.3364
+Epoch: 178, Loss: 0.3371
+Epoch: 179, Loss: 0.3365
+Epoch: 180, Loss: 0.3387
+100%|██████████| 62/62 [03:15<00:00,  3.15s/it]
+100%|██████████| 62/62 [03:24<00:00,  3.29s/it]
+Epoch: 180, Loss: 0.3387, Val: 0.8022, Test: 0.8012
+
+Epoch: 181, Loss: 0.3362
+Epoch: 182, Loss: 0.3372
+Epoch: 183, Loss: 0.3351
+Epoch: 184, Loss: 0.3410
+Epoch: 185, Loss: 0.3379
+Epoch: 186, Loss: 0.3333
+Epoch: 187, Loss: 0.3340
+Epoch: 188, Loss: 0.3366
+Epoch: 189, Loss: 0.3336
+Epoch: 190, Loss: 0.3333
+100%|██████████| 62/62 [03:36<00:00,  3.50s/it]
+100%|██████████| 62/62 [03:22<00:00,  3.27s/it]
+Epoch: 190, Loss: 0.3333, Val: 0.8040, Test: 0.8030
+
+Epoch: 191, Loss: 0.3337
+Epoch: 192, Loss: 0.3332
+Epoch: 193, Loss: 0.3329
+Epoch: 194, Loss: 0.3339
+Epoch: 195, Loss: 0.3859
+Epoch: 196, Loss: 0.4059
+Epoch: 197, Loss: 0.7047
+Epoch: 198, Loss: 0.4793
+Epoch: 199, Loss: 0.5776
+Epoch: 200, Loss: 0.8350
+100%|██████████| 62/62 [03:11<00:00,  3.09s/it]
+100%|██████████| 62/62 [03:10<00:00,  3.08s/it]
+Epoch: 200, Loss: 0.8350, Val: 0.6071, Test: 0.6078
+
+Epoch: 201, Loss: 0.7685
+Epoch: 202, Loss: 0.5958
+Epoch: 203, Loss: 0.4606
+Epoch: 204, Loss: 0.4200
+Epoch: 205, Loss: 0.4711
+Epoch: 206, Loss: 0.5003
+Epoch: 207, Loss: 0.5407
+Epoch: 208, Loss: 0.5316
+Epoch: 209, Loss: 0.4563
+Epoch: 210, Loss: 0.4148
+100%|██████████| 62/62 [03:39<00:00,  3.55s/it]
+100%|██████████| 62/62 [03:21<00:00,  3.25s/it]
+Epoch: 210, Loss: 0.4148, Val: 0.7471, Test: 0.7470
+
+Epoch: 211, Loss: 0.3917
+Epoch: 212, Loss: 0.3797
+Epoch: 213, Loss: 0.3902
+Epoch: 214, Loss: 0.3781
+Epoch: 215, Loss: 0.4102
+Epoch: 216, Loss: 0.3954
+Epoch: 217, Loss: 0.3931
+Epoch: 218, Loss: 0.3639
+Epoch: 219, Loss: 0.3801
+Epoch: 220, Loss: 0.3968
+100%|██████████| 62/62 [03:26<00:00,  3.33s/it]
+100%|██████████| 62/62 [03:24<00:00,  3.30s/it]
+Epoch: 220, Loss: 0.3968, Val: 0.7428, Test: 0.7429
+
+Epoch: 221, Loss: 0.3988
+Epoch: 222, Loss: 0.3536
+Epoch: 223, Loss: 0.3547
+Epoch: 224, Loss: 0.3596
+Epoch: 225, Loss: 0.3882
+Epoch: 226, Loss: 0.3892
+Epoch: 227, Loss: 0.3768
+Epoch: 228, Loss: 0.3943
+Epoch: 229, Loss: 0.3756
+Epoch: 230, Loss: 0.3749
+100%|██████████| 62/62 [03:33<00:00,  3.45s/it]
+100%|██████████| 62/62 [03:24<00:00,  3.30s/it]
+Epoch: 230, Loss: 0.3749, Val: 0.7728, Test: 0.7722
+
+Epoch: 231, Loss: 0.3627
+Epoch: 232, Loss: 0.3717
+Epoch: 233, Loss: 0.3775
+Epoch: 234, Loss: 0.3762
+Epoch: 235, Loss: 0.3706
+Epoch: 236, Loss: 0.3763
+Epoch: 237, Loss: 0.3582
+Epoch: 238, Loss: 0.3470
+Epoch: 239, Loss: 0.3578
+Epoch: 240, Loss: 0.3720
+100%|██████████| 62/62 [03:38<00:00,  3.53s/it]
+100%|██████████| 62/62 [03:29<00:00,  3.38s/it]
+Epoch: 240, Loss: 0.3720, Val: 0.7649, Test: 0.7644
+
+Epoch: 241, Loss: 0.3703
+Epoch: 242, Loss: 0.3668
+Epoch: 243, Loss: 0.3702
+Epoch: 244, Loss: 0.3556
+Epoch: 245, Loss: 0.3437
+Epoch: 246, Loss: 0.3515
+Epoch: 247, Loss: 0.3531
+Epoch: 248, Loss: 0.3584
+Epoch: 249, Loss: 0.3586
+Epoch: 250, Loss: 0.3635
+100%|██████████| 62/62 [03:32<00:00,  3.43s/it]
+100%|██████████| 62/62 [03:48<00:00,  3.68s/it]
+Epoch: 250, Loss: 0.3635, Val: 0.7979, Test: 0.7970
+
+Epoch: 251, Loss: 0.3507
+Epoch: 252, Loss: 0.3513
+Epoch: 253, Loss: 0.3555
+Epoch: 254, Loss: 0.3443
+Epoch: 255, Loss: 0.3350
+Epoch: 256, Loss: 0.3344
+Epoch: 257, Loss: 0.3325
+Epoch: 258, Loss: 0.3311
+Epoch: 259, Loss: 0.3318
+Epoch: 260, Loss: 0.3294
+100%|██████████| 62/62 [03:38<00:00,  3.52s/it]
+100%|██████████| 62/62 [03:41<00:00,  3.58s/it]
+Epoch: 260, Loss: 0.3294, Val: 0.8037, Test: 0.8027
+
+Epoch: 261, Loss: 0.3295
+Epoch: 262, Loss: 0.3295
+Epoch: 263, Loss: 0.3523
+Epoch: 264, Loss: 0.3286
+Epoch: 265, Loss: 0.3292
+Epoch: 266, Loss: 0.3283
+Epoch: 267, Loss: 0.3307
+Epoch: 268, Loss: 0.3288
+Epoch: 269, Loss: 0.3276
+Epoch: 270, Loss: 0.3269
+100%|██████████| 62/62 [03:42<00:00,  3.58s/it]
+100%|██████████| 62/62 [03:32<00:00,  3.42s/it]
+Epoch: 270, Loss: 0.3269, Val: 0.8084, Test: 0.8072
+
+Epoch: 271, Loss: 0.3272
+Epoch: 272, Loss: 0.3271
+Epoch: 273, Loss: 0.3273
+Epoch: 274, Loss: 0.3270
+Epoch: 275, Loss: 0.3266
+Epoch: 276, Loss: 0.3268
+Epoch: 277, Loss: 0.3265
+Epoch: 278, Loss: 0.3269
+Epoch: 279, Loss: 0.3269
+Epoch: 280, Loss: 0.3260
+100%|██████████| 62/62 [03:34<00:00,  3.46s/it]
+100%|██████████| 62/62 [03:38<00:00,  3.52s/it]
+Epoch: 280, Loss: 0.3260, Val: 0.8085, Test: 0.8073
+
+Epoch: 281, Loss: 0.3262
+Epoch: 282, Loss: 0.3265
+Epoch: 283, Loss: 0.3264
+Epoch: 284, Loss: 0.3262
+Epoch: 285, Loss: 0.3256
+Epoch: 286, Loss: 0.3259
+Epoch: 287, Loss: 0.3255
+Epoch: 288, Loss: 0.3257
+Epoch: 289, Loss: 0.3268
+Epoch: 290, Loss: 0.3276
+100%|██████████| 62/62 [03:38<00:00,  3.53s/it]
+100%|██████████| 62/62 [03:25<00:00,  3.32s/it]
+Epoch: 290, Loss: 0.3276, Val: 0.8087, Test: 0.8076
+
+Epoch: 291, Loss: 0.3253
+Epoch: 292, Loss: 0.3256
+Epoch: 293, Loss: 0.3253
+Epoch: 294, Loss: 0.3254
+Epoch: 295, Loss: 0.3253
+Epoch: 296, Loss: 0.3249
+Epoch: 297, Loss: 0.3254
+Epoch: 298, Loss: 0.3253
+Epoch: 299, Loss: 0.3257
+Epoch: 300, Loss: 0.3253
+100%|██████████| 62/62 [03:20<00:00,  3.23s/it]
+100%|██████████| 62/62 [03:16<00:00,  3.18s/it]
+Epoch: 300, Loss: 0.3253, Val: 0.8094, Test: 0.8083
+Final Test: 0.8865
